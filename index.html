@@ -1,0 +1,1485 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ปริศนากู้กรุงศรี</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Cinzel:wght@500;700&family=Pridi:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap">
+<style>
+/* Layout concept: one framed "game cabinet" in carved dark wood and gold; screens swap inside it.
+   Scenes are drawn as SVG (sunset menu, jungle ruin, parchment maps); puzzles sit on aged paper. */
+:root{
+  color-scheme:dark;
+  --night:#120a05; --wood:#2a160b; --wood2:#3d2212; --wood3:#54301a;
+  --brick:#8c3a1c; --brick2:#b9502a; --gold:#e3b657; --gold2:#f6dc95; --gold-d:#9b7127;
+  --paper:#ecd9a8; --paper2:#d8bd84; --paper-d:#a98550; --ink:#3a2412; --ink2:#6b4a2a;
+  --moss:#2b4a32; --moss2:#3f6a45; --teal:#3f7c80; --ok:#6fdc83; --bad:#ff7a5c;
+  --txt:#f3e6c4; --txt2:#cdb88a;
+  --f-title:'Chonburi','Pridi','Loma',serif;
+  --f-head:'Pridi','Sarabun','Loma',serif;
+  --f-body:'Sarabun','Noto Sans Thai','Loma',system-ui,sans-serif;
+  --f-lat:'Cinzel','Times New Roman',serif;
+  --tex:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .32  0 0 0 0 .2  0 0 0 0 .07  0 0 0 .32 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);background-image:radial-gradient(ellipse at 50% 0,#3a2010 0,#120a05 70%);background-attachment:fixed;color:var(--txt);font:16px/1.55 var(--f-body);-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
+h1,h2,h3,h4,p{margin:0}
+svg{display:block}
+#game{max-width:1180px;margin:0 auto;padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #ffe9a8cc}70%{box-shadow:0 0 0 14px #ffe9a800}100%{box-shadow:0 0 0 0 #ffe9a800}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes drift{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes glint{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes mote{0%{transform:translate(0,0);opacity:0}15%{opacity:.9}85%{opacity:.9}100%{transform:translate(var(--dx),-90px);opacity:0}}
+@keyframes sail{from{transform:translateX(-18%)}to{transform:translateX(118%)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(3px) rotate(1deg)}}
+@keyframes door{from{transform:scaleX(1)}to{transform:scaleX(.08)}}
+@keyframes starin{0%{transform:scale(0) rotate(-40deg);opacity:0}70%{transform:scale(1.25) rotate(6deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+
+/* ---------- screen shell ---------- */
+.screen{position:relative;border:3px solid var(--gold-d);border-radius:18px;overflow:hidden;background:linear-gradient(#2e180b,#1c0f07);box-shadow:0 0 0 2px #000,0 16px 44px #000c,inset 0 0 0 2px #e3b65733;animation:fadein .35s ease}
+.topbar{display:flex;align-items:center;gap:10px;padding:9px 12px;background:linear-gradient(#4d2c16,#341b0d);border-bottom:2px solid var(--gold-d);position:relative;z-index:3;flex-wrap:wrap}
+.hud-r{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-width:40px;height:40px;padding:0 10px;border-radius:99px;border:2px solid var(--gold-d);background:linear-gradient(#5a3820,#3a2112);color:var(--gold2);box-shadow:inset 0 1px 0 #ffffff22,0 2px 0 #1a0b04;transition:transform .12s,filter .12s}
+.iconbtn:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.iconbtn svg{width:20px;height:20px}
+.iconbtn b{font:700 .9rem var(--f-head);color:var(--gold2)}
+.iconbtn.round{width:40px;padding:0;border-radius:50%}
+.hintbtn:disabled{opacity:.45;cursor:not-allowed}
+.ribbon{position:relative;padding:.38em 1.5em;border-radius:8px;background:linear-gradient(#b4502a,#772c12);border:2px solid var(--gold);color:#fff0c8;font:700 1.05rem/1.3 var(--f-head);text-shadow:0 2px 0 #4a1a08;box-shadow:inset 0 1px 0 #ffffff33,0 3px 0 #2a0f04}
+.pill{display:inline-flex;align-items:center;gap:.4em;padding:.2em .8em;border-radius:99px;border:2px solid var(--gold-d);background:#2b170b;font:700 .95rem var(--f-head);color:var(--gold2);font-variant-numeric:tabular-nums}
+.pill svg{width:18px;height:18px;color:var(--gold)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;min-height:46px;padding:.55em 1.5em;border-radius:12px;border:2px solid var(--gold);background:linear-gradient(#bf552d,#7e2f14);color:#fff1cf;font:700 1.05rem/1.3 var(--f-head);text-shadow:0 2px 0 #4a1a08;box-shadow:inset 0 2px 0 #ffffff33,inset 0 -3px 0 #0004,0 4px 0 #3a1507,0 8px 14px #0007;transition:transform .12s,filter .12s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:active{transform:translateY(3px);box-shadow:inset 0 2px 0 #ffffff33,0 1px 0 #3a1507}
+.btn svg{width:20px;height:20px}
+.btn.lg{min-height:54px;font-size:1.2rem}
+.btn.moss{background:linear-gradient(#3b5f40,#21392a);border-color:var(--gold-d);box-shadow:inset 0 2px 0 #ffffff22,inset 0 -3px 0 #0004,0 4px 0 #0e1a12,0 8px 14px #0007}
+.btn.green{background:linear-gradient(#45934f,#245c33);box-shadow:inset 0 2px 0 #ffffff33,inset 0 -3px 0 #0004,0 4px 0 #10301a,0 8px 14px #0007}
+.btn.wood{background:linear-gradient(#5a3820,#341c0d);border-color:var(--gold-d)}
+.btn.block{width:100%}
+.btn:disabled{filter:grayscale(.85) brightness(.65);cursor:not-allowed;transform:none}
+.btn.pulse{animation:pulse 1.8s infinite}
+
+.panel{background:linear-gradient(#3e2313,#2a160b);border:2px solid var(--gold-d);border-radius:12px;padding:12px;box-shadow:inset 0 0 0 1px #0007,inset 0 0 22px #0006}
+.panel h3,.paper h3{font:700 1.05rem var(--f-head)}
+.panel h3{color:var(--gold2)}
+.paper{position:relative;color:var(--ink);background:var(--tex),radial-gradient(ellipse at 30% 15%,#f6e8c0,#e6cf98 55%,#cfae70);border:2px solid #8a6a35;border-radius:10px;box-shadow:inset 0 0 36px #8a5a2288,inset 0 0 0 3px #f4e4b866,0 6px 18px #0008}
+.paper h3{color:#5a2c10}
+.muted{color:var(--txt2)}
+.ink2{color:var(--ink2)}
+
+/* ---------- menu ---------- */
+.menu{aspect-ratio:16/9;min-height:560px}
+.menu .bg{position:absolute;inset:0;width:100%;height:100%}
+.menu .hero{position:absolute;left:3.5%;bottom:-1%;height:74%;aspect-ratio:200/330;filter:drop-shadow(0 10px 12px #0008)}
+.menu .hero svg{width:100%;height:100%}
+.menu .fg{position:absolute;inset:0;pointer-events:none}
+.menu .tools{position:absolute;right:16px;top:14px;display:flex;gap:10px;z-index:4}
+.menu .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(44%,470px);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;z-index:3}
+.title{font-family:var(--f-title);font-size:clamp(38px,6.4vw,76px);line-height:1.08;background:linear-gradient(#fff4c4,#eebd4f 52%,#a8701e);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #4a2208) drop-shadow(0 7px 10px #000b);padding-block:.05em}
+.subtitle{display:flex;align-items:center;gap:10px;font:700 clamp(9px,1.35vw,15px) var(--f-lat);letter-spacing:.24em;color:var(--gold2);text-shadow:0 2px 6px #000}
+.subtitle::before,.subtitle::after{content:"";width:clamp(18px,4vw,56px);height:2px;background:linear-gradient(90deg,transparent,var(--gold));}
+.subtitle::after{transform:scaleX(-1)}
+.menu .btns{display:flex;flex-direction:column;gap:10px;width:min(100%,300px);margin-top:10px}
+.menu .tag{margin-top:6px;font-size:.85rem;color:#f9e7b0;text-shadow:0 1px 6px #000}
+.motes{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.motes i{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe9a0;box-shadow:0 0 8px 3px #ffd36a99;opacity:0;animation:mote var(--t) linear infinite;animation-delay:var(--d)}
+
+/* ---------- world map ---------- */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;padding:14px}
+.mapbox{position:relative;aspect-ratio:760/460;border-radius:10px;overflow:hidden;border:3px solid #7a5a2a;box-shadow:0 6px 20px #000a,inset 0 0 40px #5a3a1a88;background:#d8bd84}
+.mapbox>svg{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;z-index:2}
+.pin .med{width:clamp(34px,5.6vw,52px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;border:3px solid var(--gold);background:radial-gradient(circle at 35% 30%,#d4683a,#7a2c12);color:#fff1cf;font:700 clamp(15px,2.2vw,22px) var(--f-head);box-shadow:0 3px 0 #2a0f04,0 6px 12px #0009;transition:transform .15s}
+.pin:hover .med{transform:scale(1.12)}
+.pin.sel .med{box-shadow:0 0 0 4px #fff3c088,0 0 20px 6px #ffd36acc,0 3px 0 #2a0f04}
+.pin.done .med{background:radial-gradient(circle at 35% 30%,#58b068,#1f5a30)}
+.pin.locked .med{background:radial-gradient(circle at 35% 30%,#8a8478,#4a463e);border-color:#a79f8a;color:#d9d1bb}
+.pin.cur .med{animation:pulse 1.8s infinite}
+.pin .med svg{width:55%;height:55%}
+.pin .lab{font:700 clamp(9px,1.35vw,12.5px)/1.2 var(--f-head);color:#fff0c8;background:#3a1d0ee6;border:1px solid var(--gold-d);border-radius:6px;padding:2px 7px;text-align:center;white-space:nowrap;box-shadow:0 2px 6px #0007}
+.pin .lab small{display:block;font-size:.85em;color:var(--gold2)}
+.sidecard{display:flex;flex-direction:column;gap:10px;padding:12px;align-self:start}
+.sidecard .thumb{aspect-ratio:16/11;border-radius:8px;overflow:hidden;border:2px solid #8a6a35;box-shadow:0 3px 10px #0007}
+.sidecard .thumb svg{width:100%;height:100%}
+.sidecard h3{font-size:1.15rem}
+.stars{display:flex;gap:4px}
+.stars svg{width:24px;height:24px}
+.stars .on{color:#f0b82e;filter:drop-shadow(0 1px 0 #7a4a08)}
+.stars .off{color:#a8957a;opacity:.55}
+
+/* ---------- level layouts ---------- */
+.lvl{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;padding:14px}
+.lvl.one{grid-template-columns:minmax(0,1fr)}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.scene{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:3px solid var(--gold-d);background:#16241a;box-shadow:0 6px 20px #000a}
+.scene>svg.art{position:absolute;inset:0;width:100%;height:100%}
+.hs{position:absolute;width:clamp(34px,6%,54px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #fff3c0;background:radial-gradient(#ffe9a877,#e3b65722 62%,transparent 72%);color:#fff7d6;display:grid;place-items:center;animation:pulse 2.2s infinite;z-index:2}
+.hs svg{width:52%;height:52%;filter:drop-shadow(0 1px 2px #000)}
+.hs:hover{background:radial-gradient(#fff3c0aa,#e3b65744 62%,transparent 72%)}
+.hs.found{animation:none;border-color:var(--ok);background:#6fdc8333;color:var(--ok)}
+.hs.hint{border-color:#fff;animation:pulse .9s infinite;box-shadow:0 0 0 4px #fff8}
+.caption{position:absolute;left:12px;bottom:12px;max-width:62%;padding:.45em .9em;border-radius:8px;background:#2a160bd9;border:1px solid var(--gold-d);font-size:.92rem;color:#fbeab8;z-index:3}
+.cta{position:absolute;right:12px;bottom:12px;z-index:4}
+.cluecard{position:absolute;left:0;right:0;margin-inline:auto;top:12px;width:min(92%,520px);z-index:5;padding:12px 14px;animation:pop .25s ease;display:flex;gap:12px;align-items:flex-start}
+.cluecard .ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#7a2c12;color:var(--gold2);border:2px solid var(--gold)}
+.cluecard .ic svg{width:24px;height:24px}
+.cluecard h4{font:700 1rem var(--f-head);color:#5a2c10}
+.cluecard p{font-size:.95rem;line-height:1.5}
+.cluecard .x{margin-left:auto;flex:none;width:30px;height:30px;color:var(--ink2)}
+.inv{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.inv .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{aspect-ratio:1;border-radius:10px;border:2px solid var(--gold-d);background:radial-gradient(#4a2c18,#24130a);display:grid;place-items:center;color:var(--gold2);box-shadow:inset 0 0 12px #000a}
+.slot svg{width:62%;height:62%}
+.slot.new{animation:pop .4s ease}
+.slot.empty{border-style:dashed;opacity:.6}
+.meter{height:10px;border-radius:99px;background:#1a0d06;border:1px solid var(--gold-d);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,#c98b2e,#f6dc95);transition:width .4s}
+.stat-row{display:flex;justify-content:space-between;gap:10px;font-size:.95rem;color:var(--txt2)}
+.stat-row b{color:var(--gold2);font-family:var(--f-head)}
+
+/* matching */
+.board{padding:16px 16px 18px}
+.board .lead{text-align:center;margin-bottom:12px;font:600 1rem var(--f-head);color:#5a2c10}
+.match{position:relative;display:grid;grid-template-columns:minmax(0,1fr) clamp(36px,9vw,110px) minmax(0,1fr);row-gap:10px;align-items:stretch}
+.match .cell{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#fbf1d4cc;border:2px solid #b8975a;min-height:64px;text-align:left;color:var(--ink);transition:transform .12s,border-color .12s,background .12s;position:relative}
+.match .cell:hover{transform:translateY(-1px);border-color:#7a4a1a}
+.match .cell.sel{border-color:var(--brick2);background:#fff4d0;box-shadow:0 0 0 3px #b9502a55}
+.match .cell.linked{border-color:#7a4a1a;background:#fff1c8}
+.match .cell.ok{border-color:#2f8a43;background:#e3f4d0}
+.match .cell.bad{border-color:#c4472a;background:#ffe0d4;animation:shake .4s}
+.match .cell .ti{flex:none;width:clamp(48px,11vw,84px);aspect-ratio:16/11;border-radius:6px;overflow:hidden;border:1px solid #8a6a35}
+.match .cell .ti svg{width:100%;height:100%}
+.match .cell b{font:700 clamp(.85rem,2.2vw,1.05rem)/1.3 var(--f-head)}
+.match .cell span{font-size:clamp(.8rem,2.1vw,.98rem);line-height:1.4}
+.match .cell .dot{position:absolute;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#e3b657;border:2px solid #7a4a1a}
+.match .cell.L .dot{right:-8px}.match .cell.R .dot{left:-8px}
+.match .gap{grid-column:2}
+.match svg.lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.lines path{fill:none;stroke:#7a4a1a;stroke-width:3;stroke-linecap:round}
+.lines path.ok{stroke:#2f8a43}.lines path.bad{stroke:#c4472a;stroke-dasharray:6 6}
+
+/* cipher */
+.cipher{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;padding:14px}
+.cipher .msg{padding:16px}
+.glyphs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-block:10px}
+.glyph{aspect-ratio:1;border-radius:8px;background:#fbf1d466;border:1px solid #a98550;display:grid;place-items:center;color:#4a2610}
+.glyph svg{width:72%;height:72%}
+.keygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.key{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:8px;background:#fbf1d4aa;border:2px solid #b8975a;color:#4a2610;transition:transform .12s,background .12s}
+.key:hover{transform:translateY(-2px);background:#fff4d0;border-color:var(--brick2)}
+.key svg{width:34px;height:34px}
+.key b{font:700 1.3rem/1 var(--f-head)}
+.slots-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-block:10px}
+.sl{width:clamp(34px,8vw,46px);aspect-ratio:.82;border-radius:8px;border:2px solid #8a6a35;background:#fff8e0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 2px;color:#4a2610}
+.sl.sel{border-color:var(--brick2);box-shadow:0 0 0 3px #b9502a55}
+.sl.ok{border-color:#2f8a43;background:#e3f4d0}
+.sl.bad{border-color:#c4472a;background:#ffe0d4;animation:shake .4s}
+.sl svg{width:70%;height:auto;aspect-ratio:1}
+.sl b{font:700 1.2rem/1 var(--f-head);min-height:1.2em}
+.row-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+/* map pieces */
+.puz3{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;padding:14px}
+.mboard{position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:3px;aspect-ratio:760/460;padding:6px;border-radius:10px;background:#5a3a1a;border:3px solid #7a5a2a;box-shadow:inset 0 0 30px #000a}
+.mslot{position:relative;border-radius:4px;background:#00000033;border:2px dashed #c9a35a88;overflow:hidden;transition:background .15s}
+.mslot:hover,.mslot.hot{background:#e3b65733}
+.mslot.ok{border:0;animation:pop .35s}
+.mslot.shake{animation:shake .4s}
+.mslot svg{position:absolute;inset:0;width:100%;height:100%}
+.tray{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.piece{position:relative;aspect-ratio:760/460*2/3;border-radius:6px;overflow:hidden;border:2px solid #8a6a35;background:#d8bd84;touch-action:none;cursor:grab;box-shadow:0 3px 8px #0008;transition:transform .12s,box-shadow .12s}
+.piece:hover{transform:translateY(-2px) rotate(-1deg)}
+.piece.sel{box-shadow:0 0 0 3px var(--gold2),0 6px 14px #000a;transform:scale(1.04)}
+.piece.used{visibility:hidden}
+.piece svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ghost{position:fixed;z-index:200;pointer-events:none;border-radius:6px;overflow:hidden;border:2px solid var(--gold2);box-shadow:0 10px 24px #000b;opacity:.95;transform:rotate(-3deg) scale(1.05)}
+.ghost svg{width:100%;height:100%}
+
+/* market */
+.market{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;padding:14px}
+.routes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.route{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px;border-radius:10px;border:2px solid #b8975a;background:#fbf1d4cc;color:var(--ink);transition:transform .12s,border-color .12s}
+.route:hover{transform:translateY(-1px);border-color:#7a4a1a}
+.route .rd{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid #7a4a1a;background:#fff8e0;display:grid;place-items:center;margin-top:2px;color:#fff}
+.route.on{border-color:var(--brick2);background:#fff1c8;box-shadow:0 0 0 3px #b9502a44}
+.route.on .rd{background:var(--brick2)}
+.route .rd svg{width:14px;height:14px;opacity:0}
+.route.on .rd svg{opacity:1}
+.route b{display:block;font:700 .98rem var(--f-head)}
+.route small{display:block;color:var(--ink2);font-size:.82rem;line-height:1.4}
+.route .days{color:#8c3a1c;font-weight:700}
+.goods{display:flex;flex-direction:column;gap:8px}
+.good{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#1c0e06;border:1px solid #6a4a22}
+.good .gi{flex:none;width:36px;height:36px;border-radius:8px;background:#4a2c18;display:grid;place-items:center;color:var(--gold2)}
+.good .gi svg{width:24px;height:24px}
+.good b{flex:1;font:600 1rem var(--f-head);color:var(--txt)}
+.good .cnt{font:700 1.05rem var(--f-head);font-variant-numeric:tabular-nums;color:var(--txt2)}
+.good.met .cnt{color:var(--ok)}
+.good.over .cnt{color:#ffd36a}
+.good.shortage{border-color:var(--bad)}
+.boat{position:absolute;left:0;bottom:6%;width:22%;animation:none}
+.boat.go{animation:sail 2.6s linear forwards}
+.boat svg{width:100%;animation:bob 1.6s ease-in-out infinite}
+.result{padding:10px 12px;border-radius:10px;font-weight:600;font-size:.95rem}
+.result.good{background:#e3f4d0;color:#1f5a30;border:2px solid #2f8a43}
+.result.bad{background:#ffe0d4;color:#8a2a14;border:2px solid #c4472a}
+
+/* timeline */
+.tl{display:flex;flex-direction:column;gap:8px;margin-block:10px}
+.ev{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#fbf1d4cc;border:2px solid #b8975a;color:var(--ink);text-align:left;width:100%;transition:transform .12s,border-color .12s,background .12s}
+.ev:hover{border-color:#7a4a1a}
+.ev.sel{border-color:var(--brick2);background:#fff4d0;box-shadow:0 0 0 3px #b9502a55}
+.ev.ok{border-color:#2f8a43;background:#e3f4d0}
+.ev.bad{border-color:#c4472a;background:#ffe0d4;animation:shake .4s}
+.ev .no{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#7a2c12;color:#fff1cf;font:700 .95rem var(--f-head)}
+.ev .tx{flex:1;min-width:0}
+.ev .tx b{display:block;font:700 .98rem/1.3 var(--f-head)}
+.ev .tx small{display:block;color:var(--ink2);font-size:.85rem;line-height:1.35}
+.ev .yr{flex:none;padding:.1em .6em;border-radius:99px;background:#7a2c12;color:var(--gold2);font:700 .85rem var(--f-head);animation:pop .3s}
+.ev .mv{flex:none;display:flex;flex-direction:column;gap:2px}
+.ev .mv span{display:grid;place-items:center;width:28px;height:20px;border-radius:5px;border:1px solid #8a6a35;background:#f6e8c0;color:#5a2c10}
+.ev .mv span:hover{background:#fff;border-color:var(--brick2)}
+.ev .mv svg{width:14px;height:14px}
+.vault{position:relative}
+.vault .doors{position:absolute;inset:0}
+
+/* ---------- modals ---------- */
+.mback{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px 16px;background:#000000b8;backdrop-filter:blur(2px);animation:fadein .2s}
+.modal{position:relative;width:min(100%,760px);max-height:calc(100dvh - 32px);overflow:auto;border-radius:16px;border:3px solid var(--gold);background:linear-gradient(#3a2010,#24130a);box-shadow:0 20px 60px #000,inset 0 0 0 2px #0008;animation:pop .28s ease}
+.modal.narrow{width:min(100%,460px)}
+.modal .mh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:linear-gradient(#5a3018,#3a1d0e);border-bottom:2px solid var(--gold-d)}
+.modal .mh h2{font:700 1.2rem var(--f-head);color:var(--gold2)}
+.modal .mb{padding:16px}
+.dlg{align-self:end;width:min(100%,780px);padding:0;overflow:visible}
+.dlg-in{display:flex;gap:14px;padding:16px;align-items:flex-start}
+.dlg .face{flex:none;width:76px;height:76px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);background:#d98d4e}
+.dlg .who{font:700 .95rem var(--f-head);color:var(--gold2);margin-bottom:2px}
+.dlg .txt{font-size:1.05rem;line-height:1.65;color:var(--txt);min-height:3.3em}
+.dlg .nav{display:flex;justify-content:space-between;align-items:center;padding:0 16px 14px;gap:10px}
+.dots{display:flex;gap:6px}.dots i{width:8px;height:8px;border-radius:50%;background:#6a4a22}.dots i.on{background:var(--gold)}
+
+.book{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);min-height:340px}
+.tabs{display:flex;gap:6px;padding:10px 12px 0;background:linear-gradient(#5a3018,#3a1d0e);flex-wrap:wrap}
+.tab{padding:.5em 1.4em;border-radius:10px 10px 0 0;border:2px solid var(--gold-d);border-bottom:0;background:#2a160b;color:var(--txt2);font:700 .98rem var(--f-head)}
+.tab.on{background:var(--paper);color:var(--ink);background-image:var(--tex)}
+.book .l,.book .r{padding:14px}
+.book .l{border-right:2px solid #b8975a;display:flex;flex-direction:column;gap:8px;background:var(--tex),linear-gradient(90deg,#e6cf98,#f0dfae)}
+.book .r{background:var(--tex),linear-gradient(90deg,#f0dfae,#e6cf98);color:var(--ink)}
+.ent{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:2px solid #b8975a;background:#fbf1d466;text-align:left;color:var(--ink);width:100%}
+.ent:hover{background:#fff4d0}
+.ent.on{background:#f2d58f;border-color:#8c3a1c}
+.ent svg{flex:none;width:22px;height:22px;color:#8c3a1c}
+.ent b{font:700 .95rem var(--f-head)}
+.ent .lk{opacity:.5}
+.detail h3{font:700 1.15rem var(--f-head);color:#5a2c10;margin-bottom:6px}
+.detail p{line-height:1.7}
+.detail .big{width:100px;height:100px;margin:0 auto 10px;color:#8c3a1c;opacity:.85}
+.empty-note{padding:20px 6px;text-align:center;color:var(--ink2)}
+
+.know{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:0}
+.know .im{position:relative;min-height:240px;background:#1c1008}
+.know .im svg{position:absolute;inset:0;width:100%;height:100%}
+.know .tx{padding:16px 18px;color:var(--ink);background:var(--tex),radial-gradient(ellipse at 30% 15%,#f6e8c0,#e6cf98 55%,#cfae70)}
+.know .tx h3{font:700 1.4rem var(--f-head);color:#5a2c10;margin-bottom:6px}
+.know .tx p{line-height:1.7;margin-bottom:8px}
+.fact{padding:8px 10px;border-radius:8px;background:#fff6d6;border:1px dashed #8c3a1c;font-size:.93rem}
+.fact b{color:#8c3a1c;font-family:var(--f-head)}
+.krow{display:flex;justify-content:center;padding:12px;background:linear-gradient(#3a2010,#24130a);border-top:2px solid var(--gold-d)}
+
+.sum{width:min(100%,430px);text-align:center}
+.sum .bigstar{position:relative;margin:4px auto 6px;width:92px;height:92px}
+.sum .score{font:700 2.8rem/1 var(--f-head);color:var(--gold2);font-variant-numeric:tabular-nums;text-shadow:0 3px 0 #4a2208}
+.sum .stars{justify-content:center;margin:6px 0 10px}
+.sum .stars svg{width:44px;height:44px}
+.sum .stars svg.on{animation:starin .55s both}
+.sum .stars svg:nth-child(2){animation-delay:.2s!important}.sum .stars svg:nth-child(3){animation-delay:.4s!important}
+.srow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#1c0e06;border:1px solid #6a4a22;margin-bottom:8px;text-align:left}
+.srow svg{width:22px;height:22px;color:var(--gold)}
+.srow b{margin-left:auto;font:700 1.05rem var(--f-head);color:var(--gold2);font-variant-numeric:tabular-nums}
+.bonus{color:var(--ok);font-size:.9rem;margin-bottom:8px}
+
+.tgl{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #6a4a22}
+.sw{position:relative;width:52px;height:28px;border-radius:99px;background:#1c0e06;border:2px solid var(--gold-d);transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--txt2);transition:transform .2s,background .2s}
+.sw.on{background:#2f6a3a}.sw.on::after{transform:translateX(24px);background:#fff3c0}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.step{padding:12px;border-radius:10px;background:#1c0e06;border:1px solid #6a4a22}
+.step svg{width:30px;height:30px;color:var(--gold);margin-bottom:4px}
+.step h4{font:700 1rem var(--f-head);color:var(--gold2)}
+.step p{font-size:.92rem;color:var(--txt2);line-height:1.5}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.hcard{position:relative;border-radius:12px;overflow:hidden;border:2px solid var(--gold-d);background:#1c0e06;text-align:left;display:flex;flex-direction:column}
+.hcard .hi{aspect-ratio:16/10;position:relative}
+.hcard .hi svg{position:absolute;inset:0;width:100%;height:100%}
+.hcard .hb{padding:8px 10px}
+.hcard b{display:block;font:700 1rem var(--f-head);color:var(--gold2)}
+.hcard small{color:var(--txt2)}
+.hcard.locked .hi{filter:grayscale(1) brightness(.35)}
+.hcard.locked::after{content:"";position:absolute;inset:0}
+.hcard .lockic{position:absolute;inset:0;display:grid;place-items:center;color:var(--gold2);z-index:2}
+.hcard .lockic svg{width:38px;height:38px}
+.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;padding:.6em 1.2em;border-radius:99px;background:#2a160bf2;border:2px solid var(--gold);color:var(--gold2);font:600 .98rem var(--f-head);box-shadow:0 8px 24px #000a;animation:pop .25s ease;max-width:calc(100vw - 32px);text-align:center}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:80}
+
+/* ending */
+.end{padding:20px 16px 26px;text-align:center;background:radial-gradient(ellipse at 50% 28%,#7a4a14 0,#2a160b 62%)}
+.end h2{font:700 clamp(1.5rem,4vw,2.3rem) var(--f-title);color:var(--gold2);text-shadow:0 3px 0 #4a2208}
+.chest{width:min(300px,70%);margin:6px auto 0;filter:drop-shadow(0 0 30px #ffd36acc)}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.badge{width:120px;padding:10px 6px;border-radius:12px;background:#1c0e06;border:2px solid var(--gold-d)}
+.badge b{display:block;font:700 .85rem/1.3 var(--f-head);color:var(--gold2)}
+.badge .stars{justify-content:center}.badge .stars svg{width:18px;height:18px}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .lvl,.market,.mapwrap,.cipher,.puz3{grid-template-columns:minmax(0,1fr)}
+  .inv .slots{grid-template-columns:repeat(4,64px);justify-content:center}
+}
+@media (max-width:700px){
+  .menu{aspect-ratio:auto;min-height:620px;height:calc(100dvh - 40px);max-height:780px}
+  .menu .center{left:50%;top:7%;transform:translateX(-50%);width:min(92%,380px)}
+  .menu .hero{height:42%;left:-2%}
+  .menu .btns{width:min(78%,300px)}
+  .menu .tools{top:10px}
+  .know,.book{grid-template-columns:minmax(0,1fr)}
+  .know .im{min-height:170px}
+  .book .l{border-right:0;border-bottom:2px solid #b8975a}
+  .routes{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .caption{max-width:calc(100% - 24px);font-size:.82rem;bottom:8px;left:8px}
+  .cta{right:8px;bottom:8px}
+  .topbar{gap:8px}
+  .ribbon{font-size:.9rem;padding:.3em 1em;order:3;width:100%;text-align:center}
+  .hud-r{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ---------- fixes: layout gaps found in testing ---------- */
+.scenewrap{display:grid;grid-template-columns:minmax(0,1fr) 68px;gap:10px;align-items:start}
+.invbar{display:flex;flex-direction:column;gap:8px}
+.invbar .slot{width:100%}
+.piece{aspect-ratio:1.1014}
+.caption svg{width:1.15em;height:1.15em;display:inline-block;vertical-align:-.22em;margin-right:.45em}
+.lkic{flex:none;display:grid;place-items:center;color:var(--ok)}
+.lkic svg{width:20px;height:20px}
+.ev .mv button{display:grid;place-items:center;width:28px;height:20px;border-radius:5px;border:1px solid #8a6a35;background:#f6e8c0;color:#5a2c10;padding:0}
+.ev .mv button:hover:not(:disabled){background:#fff;border-color:var(--brick2)}
+.ev .mv button:disabled{opacity:.35;cursor:default}
+.scene.banner{aspect-ratio:16/6}
+.vault .dl,.vault .dr{transform-box:fill-box;transition:transform 1.4s cubic-bezier(.6,0,.3,1)}
+.vault .dl{transform-origin:left center}.vault .dr{transform-origin:right center}
+.vault.open .dl,.vault.open .dr{transform:scaleX(.06)}
+.result.yes{color:#256a38}
+@media(max-width:700px){.scenewrap{grid-template-columns:minmax(0,1fr)}.invbar{flex-direction:row;justify-content:center}.invbar .slot{width:56px}.scene.banner{aspect-ratio:16/9}.scenewrap .caption{display:none}}
+</style>
+<div id="game"><main id="screens"></main></div><div id="modal-root"></div><canvas id="confetti" aria-hidden="true"></canvas>
+<script>
+/* =====================================================================
+   ART  — every picture in the game is drawn here as SVG strings
+   ===================================================================== */
+let _u=0;const uid=p=>p+(++_u);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const f1=n=>(+n).toFixed(1);
+
+/* ---------- icons (24x24, stroke) ---------- */
+const IC={
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  next:'<path d="M9 5l7 7-7 7"/>',
+  music:'<path d="M9 17V6l10-2v11"/><circle cx="7" cy="17" r="2.5" fill="currentColor"/><circle cx="17" cy="15" r="2.5" fill="currentColor"/>',
+  sound:'<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+  mute:'<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/>',
+  book:'<path d="M3 5c3-1.5 6-1.5 9 1 3-2.5 6-2.5 9-1v14c-3-1.5-6-1.5-9 1-3-2.5-6-2.5-9-1z"/><path d="M12 6v14"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.9.7 1.5 1.6 1.5 2.6h4c0-1 .6-1.9 1.5-2.6A6 6 0 0 0 12 3z"/>',
+  key:'<circle cx="8" cy="12" r="4.2"/><path d="M12.2 12H21M17 12v4M20 12v3"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor"/>',
+  star:'<path fill="currentColor" stroke="currentColor" stroke-width="1" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/>',
+  scroll:'<path d="M6 4h11a2 2 0 0 1 2 2v11a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V6a2 2 0 0 1 1-2z"/><path d="M5 17h11a3 3 0 0 0 3 3M9 9h7M9 12.5h7"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>',
+  check:'<path d="M4 12.5l5 5L20 6.5"/>',
+  map:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  search:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l6 6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  temple:'<path d="M12 2.5l2 4h-4zM9.5 7h5l1 4h-7zM8 12h8l1 4H7zM5 17h14v3H5z" fill="currentColor"/>',
+  play:'<path d="M7 4l13 8-13 8z" fill="currentColor"/>',
+  up:'<path d="M6 15l6-6 6 6"/>',
+  down:'<path d="M6 9l6 6 6-6"/>',
+  rice:'<path d="M9 4h6l-1 3c3.5 2 5 6 5 9.5a3.5 3.5 0 0 1-3.5 3.5h-7A3.5 3.5 0 0 1 5 16.5C5 13 6.500 9 10 7z"/><path d="M9.500 7.500h5M9 13c2 1.500 4 1.500 6 0"/>',
+  silk:'<rect x="3.500" y="8" width="17" height="9.500" rx="2"/><ellipse cx="6" cy="12.750" rx="2" ry="4.750"/><path d="M10.500 11h8M10.500 14.500h8"/>',
+  spice:'<path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M8.500 9c0-2 2-2 2-4.500M13.500 9c0-2 2-2 2-4.500"/>',
+  wood:'<circle cx="7.500" cy="15.500" r="4"/><circle cx="16.500" cy="15.500" r="4"/><circle cx="12" cy="8" r="4"/><circle cx="12" cy="8" r="1.200"/>',
+  boat:'<path d="M3 15h18l-3 4.500H6zM12 4v11M12 5l6 7h-6"/>',
+  trophy:'<path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 20h8"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  hand:'<path d="M8 12V5.500a1.500 1.500 0 0 1 3 0V11M11 10V4a1.500 1.500 0 0 1 3 0v6M14 10V5.500a1.500 1.500 0 0 1 3 0V13a6 6 0 0 1-6 6h-1a5 5 0 0 1-4-2l-2-3a1.500 1.500 0 0 1 2.500-1.500L8 14"/>',
+  home:'<path d="M3 11l9-7 9 7M5 10v10h14V10"/>',
+  redo:'<path d="M20 5v5h-5M20 10a8 8 0 1 0 1 5"/>'
+};
+const ico=(n,c='')=>`<svg class="${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||''}</svg>`;
+
+/* 12 ancient glyphs for the cipher level */
+const GL=[
+ '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/>',
+ '<path d="M12 4L20 19H4z"/>',
+ '<path d="M16 4a8 8 0 1 0 0 16a6 6 0 1 1 0-16z"/>',
+ '<path d="M6 6l12 12M18 6L6 18M12 3v18M3 12h18"/>',
+ '<path d="M12 19c-5-2-7-6-6-10 3 0 5 2 6 5 1-3 3-5 6-5 1 4-1 8-6 10z"/>',
+ '<path d="M3 7c3-3 6 3 9 0s6 3 9 0M3 13c3-3 6 3 9 0s6 3 9 0M3 19c3-3 6 3 9 0s6 3 9 0"/>',
+ '<path d="M12 4a8 8 0 0 1 0 16M12 8a4 4 0 0 1 0 8"/><path d="M12 4v16"/>',
+ '<path d="M12 3l8 9-8 9-8-9z"/><path d="M12 8v8"/>',
+ '<path d="M12 21V8M6 8v3a6 6 0 0 0 12 0V8M6 5v3M18 5v3M12 3v5"/>',
+ '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+ '<path d="M3 17l4-10 5 10 5-10 4 10"/>'
+];
+const glyph=i=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GL[i]}</svg>`;
+
+/* ---------- shape helpers ---------- */
+function sym(cx,by,h,pts,c1,c2){
+  const R=pts.map(([w,y])=>`${f1(cx+w*h)},${f1(by-y*h)}`).join(' ');
+  const L=pts.map(([w,y])=>`${f1(cx-w*h)},${f1(by-y*h)}`).join(' ');
+  const top=`${f1(cx)},${f1(by-pts[pts.length-1][1]*h)}`;
+  return `<polygon points="${f1(cx)},${f1(by)} ${L} ${top}" fill="${c1}"/><polygon points="${f1(cx)},${f1(by)} ${R} ${top}" fill="${c2}"/>`;
+}
+const PR=[[.2,0],[.2,.1],[.16,.1],[.16,.24],[.125,.24],[.125,.37],[.095,.37],[.095,.48],[.07,.48],[.07,.58],[.05,.58],[.05,.68],[.032,.68],[.032,.76],[.018,.78],[.012,.9],[.004,1]];
+const CH=[[.2,0],[.2,.04],[.18,.04],[.18,.08],[.165,.08],[.165,.12],[.17,.14],[.168,.2],[.155,.28],[.13,.36],[.1,.43],[.075,.48],[.06,.51],[.05,.53],[.06,.545],[.06,.58],[.045,.58],[.045,.6],[.035,.6],[.035,.64],[.028,.64],[.028,.68],[.02,.68],[.02,.72],[.012,.72],[.012,.8],[.004,1]];
+function prang(cx,by,h,c1='#7a5440',c2='#52352a',det=true){
+  let s=sym(cx,by,h,PR,c1,c2);
+  if(det){
+    [.04,.17,.3,.42,.53,.63].forEach((y,i)=>{const w=.034-i*.003;s+=`<rect x="${f1(cx-w*h)}" y="${f1(by-(y+.055)*h)}" width="${f1(w*2*h)}" height="${f1(.05*h)}" rx="${f1(w*h)}" fill="#0000004d"/>`});
+    s+=`<line x1="${f1(cx)}" y1="${f1(by-.98*h)}" x2="${f1(cx)}" y2="${f1(by-1.07*h)}" stroke="#e3b657" stroke-width="${f1(Math.max(1,h*.012))}"/>`;
+  }
+  return s;
+}
+function chedi(cx,by,h,c1='#e9dcc0',c2='#b8a888'){
+  return sym(cx,by,h,CH,c1,c2)+`<line x1="${f1(cx)}" y1="${f1(by-.98*h)}" x2="${f1(cx)}" y2="${f1(by-1.06*h)}" stroke="#e3b657" stroke-width="${f1(Math.max(1,h*.012))}"/>`;
+}
+const leaf=(x,y,len,ang,col)=>`<path transform="translate(${x} ${y}) rotate(${ang})" d="M0 0C${f1(len*.3)} ${f1(-len*.28)} ${f1(len*.7)} ${f1(-len*.24)} ${len} 0C${f1(len*.7)} ${f1(len*.1)} ${f1(len*.3)} ${f1(len*.06)} 0 0Z" fill="${col}"/>`;
+function blob(cx,cy,r,c,hi){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}"/>`+(hi?`<circle cx="${f1(cx-r*.28)}" cy="${f1(cy-r*.3)}" r="${f1(r*.62)}" fill="${hi}" opacity=".55"/>`:'');
+}
+function sky(id,stops){return `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map(([o,c])=>`<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`}
+function radial(id,stops){return `<radialGradient id="${id}">${stops.map(([o,c,a])=>`<stop offset="${o}" stop-color="${c}" stop-opacity="${a??1}"/>`).join('')}</radialGradient>`}
+
+/* stone Buddha head (front view). s = approx height in px */
+function buddhaHead(cx,cy,s,moss=true){
+  const k=s/150;
+  let curls='';
+  for(let r=0;r<3;r++)for(let c=0;c<7-r;c++){const x=(c-(6-r)/2)*10.5,y=-37-r*11+Math.abs(c-(6-r)/2)*3;curls+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="4.4" fill="#8a6540"/>`}
+  return `<g transform="translate(${cx} ${cy}) scale(${f1(k)})">
+   <path d="M-36 4C-52 14-50 42-38 56C-37 38-35 18-36 4z" fill="#a47c52"/><path d="M36 4C52 14 50 42 38 56C37 38 35 18 36 4z" fill="#8d6843"/>
+   <ellipse cx="0" cy="10" rx="35" ry="47" fill="#c09666"/>
+   <path d="M0 -37C25 -37 37 -8 31 26C27 44 13 56 0 56Z" fill="#8d6843" opacity=".5"/>
+   <path d="M-36 -8C-38 -42 -19 -60 0 -60C19 -60 38 -42 36 -8C22 -28 -22 -28 -36 -8Z" fill="#7a5834"/>
+   ${curls}
+   <path d="M-13 -58C-13 -82 13 -82 13 -58Z" fill="#7a5834"/><path d="M0 -84C-4 -92 4 -95 0 -102C7 -95 4 -90 0 -84Z" fill="#7a5834"/>
+   <path d="M-24 2Q-15 8-6 2M6 2Q15 8 24 2" stroke="#3e2a18" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+   <path d="M-26 -5Q-15 -10-5 -5M5 -5Q15 -10 26 -5" stroke="#6a4a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
+   <path d="M0 4L-4 28Q0 32 6 28" stroke="#7a5834" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+   <path d="M-12 40Q0 46 12 40Q0 36 -12 40Z" fill="#8a5a3a"/>
+   ${moss?`<ellipse cx="-24" cy="-40" rx="9" ry="5" fill="#5f8a45" opacity=".85"/><ellipse cx="22" cy="30" rx="8" ry="4" fill="#5f8a45" opacity=".7"/><ellipse cx="-28" cy="40" rx="6" ry="3" fill="#5f8a45" opacity=".7"/>`:''}
+  </g>`;
+}
+
+/* explorer (back, three-quarter view) */
+function explorerSVG(){
+  return `<svg viewBox="0 0 220 330" aria-hidden="true">
+  <ellipse cx="104" cy="322" rx="64" ry="7" fill="#000" opacity=".35"/>
+  <path d="M68 318v-22h28v22q0 4-6 4H72q-4 0-4-4zM102 318v-22h28v22q0 4-6 4h-18q-4 0-4-4z" fill="#241610"/>
+  <path d="M70 204h28l-2 94H72zM102 204h28l-2 94h-24z" fill="#6b6a45"/><path d="M98 204h4l-1 94h-3z" fill="#45432a"/>
+  <rect x="66" y="196" width="68" height="12" rx="3" fill="#4a2a14"/>
+  <path d="M62 112Q58 150 66 200H134Q142 150 138 112Q100 100 62 112Z" fill="#a39060"/>
+  <rect x="54" y="118" width="92" height="86" rx="14" fill="#7b4a22"/>
+  <path d="M54 134h92v24q-46 12-92 0z" fill="#8e5a2c"/>
+  <path d="M80 118v86M120 118v86" stroke="#3a2010" stroke-width="4"/>
+  <rect x="48" y="104" width="104" height="22" rx="11" fill="#566a46"/><path d="M62 104v22M138 104v22" stroke="#33200e" stroke-width="4"/>
+  <rect x="44" y="160" width="16" height="36" rx="5" fill="#6a3c1a"/>
+  <circle cx="150" cy="176" r="13" fill="#7f8f6a" stroke="#3a2010" stroke-width="3"/>
+  <path d="M63 118Q46 152 52 192l15-2Q66 152 76 122z" fill="#a39060"/><circle cx="58" cy="196" r="8" fill="#b87a4a"/>
+  <path d="M136 120Q162 140 168 166l-13 7Q148 150 132 138z" fill="#a39060"/>
+  <path d="M158 166l24-26" stroke="#b87a4a" stroke-width="12" stroke-linecap="round"/>
+  <path d="M170 112l38 8-6 34-34-8z" fill="#ecd9a8" stroke="#8a6a35" stroke-width="2"/><path d="M178 122l22 5M176 132l22 5M174 142l20 4" stroke="#8c3a1c" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="182" cy="140" r="7" fill="#b87a4a"/>
+  <rect x="92" y="90" width="18" height="18" fill="#b87a4a"/>
+  <path d="M82 102Q101 116 120 102L122 112Q101 126 80 112Z" fill="#b23a2a"/>
+  <circle cx="102" cy="76" r="25" fill="#c98d5c"/>
+  <path d="M77 76Q77 52 102 52Q127 52 127 76Q127 88 120 94Q102 84 84 94Q77 88 77 76Z" fill="#2a1a10"/>
+  <circle cx="124" cy="82" r="6" fill="#c98d5c"/>
+  <ellipse cx="102" cy="60" rx="46" ry="10" fill="#7a5230" stroke="#3a2410" stroke-width="2"/>
+  <path d="M72 58Q74 28 102 26Q130 28 132 58Z" fill="#8c6038"/><path d="M72 55Q102 64 132 55v-8Q102 56 72 47z" fill="#3a2410"/>
+  <path d="M84 36Q96 30 108 31" stroke="#b58555" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+function faceSVG(){
+  return `<svg viewBox="0 0 80 80" aria-hidden="true"><rect width="80" height="80" fill="#d98d4e"/><circle cx="40" cy="46" r="20" fill="#c98d5c"/>
+  <path d="M20 40Q20 22 40 22Q60 22 60 40Q50 32 40 33Q30 32 20 40Z" fill="#2a1a10"/>
+  <ellipse cx="40" cy="26" rx="34" ry="8" fill="#7a5230" stroke="#3a2410" stroke-width="1.5"/><path d="M14 24Q15 5 40 3Q65 5 66 24Z" fill="#8c6038"/><path d="M14 22Q40 30 66 22v-6Q40 24 14 16z" fill="#3a2410"/>
+  <circle cx="32" cy="46" r="2.4" fill="#2a1a10"/><circle cx="48" cy="46" r="2.4" fill="#2a1a10"/><path d="M33 56Q40 62 47 56" stroke="#7a3a22" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`;
+}
+
+/* ---------- main menu scene (1000x560, slice) ---------- */
+function menuScene(){
+  const g=uid('m'),sk=(y)=>{
+    return `<g>${prang(560,y,150,'#7d4a3c','#552d28')}${prang(700,y,250,'#74402f','#4a241d')}${prang(830,y,190,'#7d4a3c','#552d28')}
+    ${chedi(480,y,120,'#a86a52','#6a3b30')}${chedi(900,y,140,'#a86a52','#6a3b30')}${chedi(940,y,100,'#a86a52','#6a3b30')}${prang(620,y,95,'#8a5444','#5e362c')}
+    <rect x="440" y="${y-26}" width="560" height="26" fill="#4a2820"/>
+    <g fill="#3a1d16">${[450,500,590,660,760,880,960].map((x,i)=>`<ellipse cx="${x}" cy="${y-6}" rx="${28+i%3*8}" ry="${22+i%2*8}"/>`).join('')}</g></g>`};
+  return `<svg class="bg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+   ${sky(g+'s',[[0,'#3f3d78'],[.3,'#b2607c'],[.55,'#ee9a58'],[.8,'#f8c670'],[1,'#fbe0a0']])}
+   ${radial(g+'g',[[0,'#fff3b8',1],[.35,'#ffd36a',.6],[1,'#ff9a4a',0]])}
+   ${sky(g+'w',[[0,'#e8924e'],[.4,'#a8523a'],[1,'#3a1d1a']])}
+  </defs>
+  <rect width="1000" height="560" fill="url(#${g}s)"/>
+  <circle cx="690" cy="330" r="230" fill="url(#${g}g)"/><circle cx="690" cy="340" r="36" fill="#fff6c8"/>
+  <g opacity=".75"><ellipse cx="200" cy="110" rx="190" ry="22" fill="#7a6aa8"/><ellipse cx="330" cy="140" rx="170" ry="16" fill="#e58a6a"/><ellipse cx="760" cy="90" rx="200" ry="20" fill="#7a6aa8"/><ellipse cx="860" cy="130" rx="150" ry="15" fill="#f0a070"/><ellipse cx="560" cy="200" rx="230" ry="14" fill="#f6b886"/><ellipse cx="100" cy="230" rx="140" ry="12" fill="#f6b886"/></g>
+  <g opacity=".5" transform="translate(-60 20)">${prang(300,385,120,'#c07860','#a05f4c',false)}${chedi(420,385,90,'#c07860','#a05f4c')}</g>
+  ${sk(385)}
+  <rect y="385" width="1000" height="175" fill="url(#${g}w)"/>
+  <g opacity=".42" transform="translate(0 770) scale(1 -1)">${sk(385)}</g>
+  <g stroke="#ffd9a0" stroke-linecap="round" opacity=".5">${Array.from({length:20},(_,i)=>`<path d="M${(i*53)%940+10} ${400+i*8} h${40+(i*17)%60}" stroke-width="${1+i%2}"/>`).join('')}</g>
+  <g transform="translate(470 470)"><path d="M0 8Q60 18 130 6L124 0Q60 8 4 0Z" fill="#1c0e0a"/><path d="M60 4L66-14L76 4Z" fill="#1c0e0a" opacity=".9"/></g>
+  <path d="M0 520Q200 500 380 530T1000 520V560H0Z" fill="#1d2a14"/>
+  <g>${leaf(980,560,230,-130,'#16240f')}${leaf(1000,560,260,-160,'#1d2f14')}${leaf(940,560,200,-105,'#223816')}${leaf(20,560,190,-60,'#16240f')}${leaf(0,540,200,-30,'#1d2f14')}</g>
+  <g><rect x="0" y="0" width="26" height="560" fill="#3a1c0e"/><rect x="26" y="0" width="5" height="560" fill="#5a2e16"/><path d="M0 0H300L260 46H0Z" fill="#2e1409"/><path d="M0 46H260L270 56H0Z" fill="#8c3a1c"/>
+   <path d="M44 56Q66 70 60 100Q70 130 56 170L40 168Q52 120 40 86Q34 66 44 56Z" fill="#a8321e"/><path d="M52 60Q62 100 54 166" stroke="#7a2012" stroke-width="3" fill="none"/></g>
+  </svg>`;
+}
+const motes=n=>`<div class="motes" aria-hidden="true">${Array.from({length:n},(_,i)=>`<i style="left:${(i*37+11)%100}%;top:${45+(i*23)%48}%;--t:${6+(i*7)%7}s;--d:${-(i*1.3)}s;--dx:${(i%2?1:-1)*(20+i*3%30)}px"></i>`).join('')}</div>`;
+
+/* ---------- exploration scene (1000x562) ---------- */
+function ruinScene(){
+  const g=uid('r');
+  const root=(d,w)=>`<path d="${d}" fill="none" stroke="#4a2e1a" stroke-width="${w}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#7a5230" stroke-width="${w*.45}" stroke-linecap="round" transform="translate(-1.5 -2)"/>`;
+  return `<svg class="art" viewBox="0 0 1000 562" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+   ${sky(g+'s',[[0,'#bcd8b0'],[.5,'#e6e8b4'],[1,'#f3e6b0']])}
+   ${sky(g+'g',[[0,'#5b8a3e'],[1,'#25421d']])}
+   <pattern id="${g}b" width="30" height="16" patternUnits="userSpaceOnUse"><rect width="30" height="16" fill="#a85a34"/><path d="M0 0H30M0 8H30M7 0V8M22 8V16" stroke="#6a3418" stroke-width="1.5"/><rect width="30" height="16" fill="#ffffff" opacity=".03"/></pattern>
+   ${radial(g+'l',[[0,'#fff6c0',.9],[1,'#fff6c0',0]])}
+  </defs>
+  <rect width="1000" height="562" fill="url(#${g}s)"/>
+  <g fill="#7ea06a" opacity=".8">${[0,120,260,400,560,700,860,980].map((x,i)=>`<ellipse cx="${x}" cy="${300+i%3*8}" rx="${110+i%2*30}" ry="${70+i%3*12}"/>`).join('')}</g>
+  <g opacity=".7">${prang(800,340,270,'#c4b090','#9d8870')}${chedi(150,350,150,'#d6c8a6','#aea083')}</g>
+  <g fill="#5f8a55">${[40,200,330,470,640,760,900].map((x,i)=>`<ellipse cx="${x}" cy="${360+i%2*10}" rx="${95+i%3*20}" ry="${52+i%2*14}"/>`).join('')}</g>
+  <path d="M0 336h120l14 -26 26 18 30 -22 30 20 40-10 30 20v150H0z" fill="url(#${g}b)"/>
+  <path d="M0 336h120l14 -26 26 18 30 -22 30 20 40-10 30 20" fill="none" stroke="#5a2c14" stroke-width="3"/>
+  <path d="M150 460V372q40-50 80 0v88z" fill="#2a1408"/><path d="M164 452V380q26-34 52 0v72z" fill="#44220f"/>
+  <g stroke="#e3b657" stroke-width="2" fill="none" opacity=".75" stroke-linecap="round"><path d="M176 400h28M176 412h20M176 424h26M180 436h18"/><circle cx="190" cy="388" r="4"/></g>
+  <path d="M640 470v-50l30 -16 24 18 40 -22 40 20 46 -10 20 18v42z" fill="url(#${g}b)" opacity=".95"/>
+  <rect y="440" width="1000" height="122" fill="url(#${g}g)"/>
+  <path d="M0 462Q140 440 300 462T620 458T1000 450V562H0Z" fill="#3a6a2c"/>
+  <g stroke="#2a4a1c" stroke-width="3" stroke-linecap="round">${Array.from({length:40},(_,i)=>{const x=(i*47)%1000,y=480+(i*31)%75;return `<path d="M${x} ${y}l-4-12M${x} ${y}l1-14M${x} ${y}l5-11"/>`}).join('')}</g>
+  <g><path d="M330 520l40-18 30 12-34 20z" fill="#b8a888"/><path d="M820 500l36-12 24 10-30 16z" fill="#a8987a"/><rect x="430" y="425" width="140" height="34" rx="3" fill="url(#${g}b)"/><rect x="450" y="404" width="100" height="24" rx="3" fill="url(#${g}b)"/></g>
+  <g>
+   <path d="M420 -10C410 80 380 150 400 230C410 300 360 400 300 470L345 480C400 420 450 370 470 300L500 230Z" fill="#5a3a22"/>
+   <path d="M580 -10C600 70 620 150 590 230C570 300 640 400 700 470L655 480C600 420 560 370 540 300L500 230Z" fill="#4a2e1a"/>
+   <path d="M360 -10C350 50 400 90 460 100L440 -10Z" fill="#3e2616"/>
+  </g>
+  ${buddhaHead(500,300,168)}
+  ${root('M392 140C416 210 420 300 440 360C456 400 480 420 500 424',20)}
+  ${root('M470 90C450 180 430 250 440 300',12)}
+  ${root('M610 130C590 220 585 300 560 350C548 380 530 410 508 424',20)}
+  ${root('M545 80C560 160 575 230 560 290',12)}
+  ${root('M440 340C420 390 400 420 360 450M565 340C590 390 610 420 650 452M500 424C500 440 490 456 470 470M500 424C510 444 540 460 570 470',14)}
+  ${root('M452 258C466 232 488 226 508 230',7)}
+  <ellipse cx="500" cy="428" rx="92" ry="12" fill="#1c3010" opacity=".5"/>
+  <g>${[[250,-20],[420,-40],[600,-30],[780,-20],[960,-10]].map(([x,y],i)=>blob(x,y+60,150+i%2*30,'#1f4a22','#3e7a35')).join('')}${[[100,60],[320,70],[520,40],[700,70],[880,80]].map(([x,y],i)=>blob(x,y,90+i%3*18,'#2c5e2a','#5a9a44')).join('')}</g>
+  <g stroke="#2c5e2a" stroke-width="3" fill="none" stroke-linecap="round">${[160,260,360,640,740,860].map((x,i)=>`<path d="M${x} 120C${x-8} 170 ${x+8} 210 ${x} ${230+i%3*30}"/>`).join('')}</g>
+  <g fill="#fff6c0" opacity=".1"><polygon points="760,0 880,0 560,470 420,470"/><polygon points="900,0 960,0 700,470 640,470"/><polygon points="640,0 700,0 440,470 400,470"/></g>
+  <circle cx="500" cy="280" r="220" fill="url(#${g}l)" opacity=".55"/>
+  <g>
+   <g transform="translate(330 500) rotate(-14)"><rect x="-26" y="-9" width="52" height="18" rx="9" fill="#ecd9a8" stroke="#8a6a35" stroke-width="2"/><path d="M-12 -9v18M12 -9v18" stroke="#b23a2a" stroke-width="3"/><path d="M-20 -3h6M-20 3h6" stroke="#8c3a1c" stroke-width="1.5"/></g>
+   <g transform="translate(724 490)"><rect x="-30" y="-14" width="60" height="30" rx="4" fill="#6a3c1a" stroke="#2e1708" stroke-width="2.5"/><path d="M-30 -14q30-18 60 0z" fill="#7b4a22" stroke="#2e1708" stroke-width="2.5"/><rect x="-5" y="-6" width="10" height="12" rx="2" fill="#e3b657"/></g>
+  </g>
+  <g>${leaf(0,562,260,-55,'#14300f')}${leaf(0,562,200,-20,'#1d4216')}${leaf(1000,562,260,-125,'#14300f')}${leaf(1000,562,200,-160,'#1d4216')}${leaf(970,562,160,-95,'#2a5a1e')}</g>
+  </svg>`;
+}
+
+/* ---------- small scenes (160x110) for thumbnails & knowledge cards ---------- */
+function scene(kind){
+  const g=uid('t'),W=160,H=110;
+  const base=(top,bot,ground)=>`<defs>${sky(g,[[0,top],[1,bot]])}</defs><rect width="${W}" height="${H}" fill="url(#${g})"/>${ground?`<rect y="86" width="${W}" height="24" fill="${ground}"/>`:''}`;
+  let s='';
+  switch(kind){
+   case 'sri':
+    s=base('#e9b574','#f8dc9c','#4a7a3a')+`<g fill="#5a8a48"><ellipse cx="14" cy="86" rx="26" ry="14"/><ellipse cx="148" cy="86" rx="28" ry="15"/></g>`
+     +chedi(40,90,66,'#efe2c2','#bba98a')+chedi(80,90,84,'#f3e8c8','#c0ae8e')+chedi(120,90,66,'#efe2c2','#bba98a')
+     +`<rect x="22" y="86" width="116" height="5" fill="#8a7a62"/>`;break;
+   case 'chai':
+    s=base('#7fb7d0','#f3e2b0','#3f7c80')+`<rect y="90" width="160" height="20" fill="#3f7c80"/><path d="M0 98h160M0 104h160" stroke="#9fd0c8" stroke-width="1" opacity=".6"/>`
+     +`<rect x="20" y="82" width="120" height="10" fill="#9a6a4a"/>`+prang(30,82,40,'#b88a62','#8a6444',false)+prang(130,82,40,'#b88a62','#8a6444',false)+prang(80,86,76,'#c89a70','#946c4c');break;
+   case 'maha':
+    s=base('#c6dcae','#eee6b8','#3a6a2c')+`<g fill="#6a9a58"><ellipse cx="20" cy="76" rx="32" ry="20"/><ellipse cx="140" cy="76" rx="34" ry="22"/></g>`
+     +`<g opacity=".8">${prang(128,80,46,'#bfae92','#97866e',false)}</g>`
+     +`<path d="M52 0C50 30 44 60 40 96h18C62 70 66 40 72 0z" fill="#5a3a22"/><path d="M108 0C112 30 118 60 124 96h-18C102 70 98 40 92 0z" fill="#4a2e1a"/>`
+     +buddhaHead(82,66,52)+`<path d="M60 40C62 62 62 78 70 94M104 40C100 62 100 78 92 94M50 80C60 92 70 96 82 96C94 96 104 92 114 80" fill="none" stroke="#4a2e1a" stroke-width="5" stroke-linecap="round"/>`
+     +`<g>${blob(40,6,30,'#2a5a2a','#4a8a3a')}${blob(86,0,34,'#2a5a2a','#4a8a3a')}${blob(134,8,30,'#2a5a2a','#4a8a3a')}</g>`;break;
+   case 'loka':
+    s=base('#e9b574','#f8dc9c','#4a7a3a')+`<g fill="#5a8a48"><ellipse cx="18" cy="84" rx="28" ry="16"/><ellipse cx="146" cy="84" rx="30" ry="18"/></g>`
+     +`<rect x="14" y="82" width="132" height="10" rx="2" fill="#9a8a72"/>`
+     +`<path d="M24 80q4-18 20-20 20-4 50-3 22 0 34 4 8 3 8 19z" fill="#e0a028"/><path d="M40 62q30-6 60-3" stroke="#b87a14" stroke-width="2" fill="none"/>`
+     +`<rect x="114" y="52" width="26" height="16" rx="6" fill="#c0392b"/><circle cx="124" cy="52" r="10" fill="#c8a070"/><path d="M116 44q8-12 16 0z" fill="#5a3a22"/><path d="M122 38q2-8 4 0z" fill="#5a3a22"/>`
+     +`<path d="M24 80l-5 3h10z" fill="#c8a070"/>`;break;
+   case 'diary':
+    s=`<defs>${sky(g,[[0,'#2a1608'],[1,'#5a3418']])}${radial(g+'c',[[0,'#ffd36a',.8],[1,'#ffd36a',0]])}</defs><rect width="160" height="110" fill="url(#${g})"/><circle cx="118" cy="30" r="46" fill="url(#${g}c)"/>`
+     +`<rect y="82" width="160" height="28" fill="#3a1d0e"/><path d="M26 86l54-8 54 8-54 10z" fill="#8a5a2a"/><path d="M30 82q50-18 50-6 0-12 50 6v10q-50-14-50-2 0-12-50 2z" fill="#ecd9a8" stroke="#8a6a35" stroke-width="1.5"/><path d="M80 76v14" stroke="#8a6a35"/>`
+     +`<g stroke="#8c3a1c" stroke-width="1.5" fill="none" stroke-linecap="round"><circle cx="46" cy="80" r="3"/><path d="M56 82l5-3 5 3M44 87h10M92 79h8M92 83h12M92 87h8"/><circle cx="108" cy="90" r="2"/></g>`
+     +`<rect x="112" y="52" width="10" height="26" rx="2" fill="#e8d8a8"/><path d="M117 52q-5-8 0-14 5 6 0 14z" fill="#ffb02e"/>`;break;
+   case 'map':
+    s=`<defs>${sky(g,[[0,'#6a4a2a'],[1,'#3a2210']])}</defs><rect width="160" height="110" fill="url(#${g})"/>`
+     +`<path d="M14 14l40-4 38 6 40-5 14 24-6 30 8 28-40 6-40-6-40 6-8-26 6-30z" fill="#e6d09a" stroke="#8a6a35" stroke-width="2"/>`
+     +`<path d="M34 58C34 34 62 24 80 26 108 28 128 40 126 62 124 84 98 92 76 90 52 88 34 80 34 58Z" fill="none" stroke="#5f9a98" stroke-width="7"/><path d="M34 58C34 34 62 24 80 26 108 28 128 40 126 62 124 84 98 92 76 90 52 88 34 80 34 58Z" fill="none" stroke="#9fd0c8" stroke-width="2.5"/>`
+     +`<g stroke="#b23a2a" stroke-width="3" stroke-linecap="round"><path d="M72 50l14 14M86 50L72 64"/></g><path d="M80 18v-8M30 60h-10" stroke="#8a6a35" stroke-width="2"/>`;break;
+   case 'market':
+    s=base('#8fcad2','#f6e2b0')+`<g opacity=".7">${prang(126,70,56,'#c4b090','#9d8870',false)}</g><rect y="70" width="160" height="40" fill="#3f7c80"/><path d="M0 80h160M0 94h160M0 104h160" stroke="#9fd0c8" stroke-width="1" opacity=".55"/>`
+     +`<g><rect x="6" y="46" width="30" height="16" fill="#8a5a2a"/><path d="M2 48l19-14 19 14z" fill="#5a3418"/><path d="M10 62v10M32 62v10" stroke="#5a3418" stroke-width="3"/></g>`
+     +`<g><path d="M20 86q55 10 110 0l-10 12H34z" fill="#6a3c1a"/><path d="M50 86q30-30 60 0z" fill="#d8b068" stroke="#8a5a2a" stroke-width="1.5"/><path d="M62 86q18-20 36 0" fill="none" stroke="#8a5a2a"/></g>`
+     +`<g><path d="M104 74q24 4 48 0l-5 8h-38z" fill="#8a4a1c"/><rect x="118" y="62" width="14" height="12" rx="3" fill="#c0392b"/></g>`;break;
+   case 'palace':
+   default:{
+    const roof=(cx,by,w,h,c)=>`<path d="M${cx-w/2} ${by}Q${cx-w/2+w*.08} ${by-h*.25} ${cx-w*.07} ${by-h}L${cx+w*.07} ${by-h}Q${cx+w/2-w*.08} ${by-h*.25} ${cx+w/2} ${by}Z" fill="${c}"/><path d="M${cx-w*.07} ${by-h}L${cx+w*.07} ${by-h}" stroke="#ffd36a" stroke-width="1.5"/>`;
+    s=`<defs>${sky(g,[[0,'#2d2656'],[.55,'#a85a62'],[1,'#f0b060']])}</defs><rect width="160" height="110" fill="url(#${g})"/><circle cx="130" cy="64" r="22" fill="#ffe9a0" opacity=".5"/>`
+     +chedi(28,92,52,'#c9a868','#8a6a3a')+chedi(132,92,52,'#c9a868','#8a6a3a')
+     +`<rect x="44" y="70" width="72" height="24" fill="#d8c8a0"/>`+roof(80,70,76,12,'#a8321e')+`<rect x="62" y="48" width="36" height="22" fill="#e8dab0"/>`+roof(80,48,44,12,'#a8321e')+`<rect x="72" y="30" width="16" height="18" fill="#e8dab0"/>`+roof(80,30,26,10,'#c0392b')+`<path d="M80 10v-8" stroke="#ffd36a" stroke-width="2"/><path d="M80 20l-3 0 3-14 3 14z" fill="#ffd36a"/>`
+     +`<g fill="#ffd36a">${[52,66,90,104].map(x=>`<rect x="${x}" y="78" width="6" height="12" rx="3"/>`).join('')}</g><rect y="92" width="160" height="18" fill="#2a1a10"/>`;
+   }
+  }
+  return `<svg viewBox="0 0 160 110" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${s}</svg>`;
+}
+
+/* ---------- maps ---------- */
+const PINS=[[205,175],[345,105],[262,300],[560,185],[448,330]]; // viewBox 760x460
+function compassRose(x,y,r){
+  return `<g transform="translate(${x} ${y})"><circle r="${r}" fill="#f1e2b4" stroke="#7a5a2a" stroke-width="2"/><circle r="${r*.8}" fill="none" stroke="#7a5a2a" stroke-width="1"/>
+  <path d="M0 ${-r*1.15}L${r*.16} 0L0 ${r*1.15}L${-r*.16} 0Z" fill="#8c3a1c"/><path d="M${-r*1.15} 0L0 ${-r*.16}L${r*1.15} 0L0 ${r*.16}Z" fill="#c9a35a"/>
+  <text y="${-r*1.28}" text-anchor="middle" font-size="${r*.5}" font-family="Pridi,serif" font-weight="700" fill="#5a2c10">N</text></g>`;
+}
+function worldMap(labels){
+  const rvd='#3f6f6e',rv='#5f9a98',rvl='#9fd0c8';
+  const ring='M150,112C250,36 520,36 640,112C722,164 722,300 640,358C520,432 250,424 150,352C68,296 68,168 150,112Z';
+  const river=(d,w)=>`<path d="${d}" fill="none" stroke="${rvd}" stroke-width="${w+5}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${rv}" stroke-width="${w}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${rvl}" stroke-width="${w*.22}" stroke-linecap="round" transform="translate(-2 -2)" opacity=".8"/>`;
+  const tree=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><circle r="7" fill="#5f8a45"/><circle cx="-2" cy="-2" r="4" fill="#7aa85a"/></g>`;
+  const mp=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0l-9 0 3-6-2 0 3-6-2 0 4-9 4 9-2 0 3 6-2 0 3 6z" fill="#8c5a3a" stroke="#5a2c10" stroke-width="1"/></g>`;
+  let o=`<rect width="760" height="460" fill="#dcc590"/>
+  <g fill="#b89a5a" opacity=".22"><ellipse cx="120" cy="90" rx="110" ry="60"/><ellipse cx="640" cy="360" rx="140" ry="70"/><ellipse cx="400" cy="440" rx="190" ry="30"/><ellipse cx="700" cy="70" rx="90" ry="40"/></g>
+  <g fill="#b9c67e" opacity=".5"><ellipse cx="50" cy="55" rx="60" ry="34"/><ellipse cx="715" cy="415" rx="60" ry="34"/><ellipse cx="60" cy="415" rx="50" ry="28"/><ellipse cx="716" cy="55" rx="54" ry="30"/></g>
+  <g fill="#9fc28a" opacity=".45"><rect x="12" y="150" width="46" height="70" rx="6"/><rect x="706" y="160" width="40" height="80" rx="6"/><rect x="300" y="6" width="70" height="26" rx="6"/><rect x="330" y="428" width="80" height="24" rx="6"/></g>
+  ${river('M410,-10C400,20 422,32 410,52',22)}${river('M772,236C742,242 728,228 706,236',22)}${river('M-12,252C20,240 50,264 74,252',22)}${river('M378,472C390,452 366,440 380,424',22)}
+  <path d="${ring}" fill="none" stroke="${rvd}" stroke-width="35" stroke-linejoin="round"/><path d="${ring}" fill="#d6c186"/><path d="${ring}" fill="none" stroke="${rv}" stroke-width="30" stroke-linejoin="round"/>
+  <path d="${ring}" fill="none" stroke="${rvl}" stroke-width="6" stroke-linejoin="round" opacity=".75" transform="translate(-2 -2)"/>
+  <path d="${ring}" fill="#d9c58a" transform="translate(0 0) scale(.955) translate(17 10.5)"/>
+  <path d="M170,236H590M380,128V344" stroke="${rv}" stroke-width="5" stroke-dasharray="1 0" opacity=".75"/>
+  <rect x="196" y="132" width="368" height="206" rx="16" fill="none" stroke="#8a5a2a" stroke-width="2.2" stroke-dasharray="7 5"/>
+  <g>${tree(140,260,1.2)}${tree(150,274)}${tree(120,300)}${tree(230,370,1.2)}${tree(250,382)}${tree(520,370)}${tree(540,360,1.2)}${tree(610,250)}${tree(626,262,1.2)}${tree(500,150)}${tree(520,160,1.2)}${tree(300,200)}${tree(420,260,1.2)}${tree(440,274)}${tree(90,100)}${tree(60,330)}${tree(690,120)}${tree(690,320)}</g>
+  <g>${mp(300,225)}${mp(325,232,.8)}${mp(395,200)}${mp(478,262)}${mp(350,350,.9)}${mp(140,150,.9)}${mp(610,165,.9)}</g>
+  <g fill="#8a6a45" opacity=".6">${[[230,250],[270,262],[300,278],[340,262],[360,290],[400,300],[430,214],[470,230],[520,250],[400,170],[440,160],[490,180]].map(([x,y])=>`<rect x="${x}" y="${y}" width="9" height="7"/>`).join('')}</g>
+  <g transform="translate(60 385)">${compassRose(0,0,26)}</g>
+  <g stroke="#8a5a2a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" fill="none" opacity=".9"><path d="M${PINS[0][0]},${PINS[0][1]}C250,120 290,100 ${PINS[1][0]},${PINS[1][1]}M${PINS[1][0]},${PINS[1][1]}C420,120 500,150 ${PINS[3][0]},${PINS[3][1]}M${PINS[3][0]},${PINS[3][1]}C560,260 500,300 ${PINS[4][0]},${PINS[4][1]}M${PINS[4][0]},${PINS[4][1]}C380,350 300,330 ${PINS[2][0]},${PINS[2][1]}"/></g>`;
+  if(labels){
+    const t=(x,y,s,w=0)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Pridi,Loma,serif" font-weight="700" font-size="13" fill="#4a2410" stroke="#f1e2b4" stroke-width="3" paint-order="stroke">${s}</text>`;
+    o+=`${t(215,200,'วัดมหาธาตุ')}${t(345,128,'พระราชวังหลวง')}${t(300,252,'วัดราชบูรณะ')}${t(170,128,'วัดโลกยสุธาราม')}${t(90,300,'วัดไชยวัฒนาราม')}${t(560,210,'ตลาดริมน้ำ')}${t(450,355,'วัดพนัญเชิง')}
+    <text x="380" y="20" text-anchor="middle" font-family="Pridi,Loma,serif" font-weight="700" font-size="15" fill="#f3e6c4" stroke="#3f6f6e" stroke-width="4" paint-order="stroke">แม่น้ำลพบุรี</text>
+    <text x="640" y="268" font-family="Pridi,Loma,serif" font-weight="700" font-size="13" fill="#f3e6c4" stroke="#3f6f6e" stroke-width="4" paint-order="stroke" text-anchor="middle">แม่น้ำป่าสัก</text>
+    <text x="64" y="215" font-family="Pridi,Loma,serif" font-weight="700" font-size="13" fill="#f3e6c4" stroke="#3f6f6e" stroke-width="4" paint-order="stroke" text-anchor="middle">เจ้าพระยา</text>`;
+  }
+  return o;
+}
+const mapSVG=(labels,vb='0 0 760 460',cls='')=>`<svg class="${cls}" viewBox="${vb}" preserveAspectRatio="none" aria-hidden="true">${worldMap(labels)}</svg>`;
+
+/* ---------- river market scene + boat ---------- */
+function boatSVG(col='#d8b068'){
+  return `<svg viewBox="0 0 220 96" aria-hidden="true"><ellipse cx="110" cy="90" rx="96" ry="5" fill="#000" opacity=".2"/>
+  <path d="M6 58Q110 80 214 56L196 82Q110 94 26 82Z" fill="#6a3c1a"/><path d="M6 58Q110 80 214 56" stroke="#e3b657" stroke-width="3" fill="none"/>
+  <path d="M46 56Q110-10 174 56Z" fill="${col}" stroke="#8a5a2a" stroke-width="2.5"/><path d="M62 54Q110 6 158 54M80 54Q110 22 140 54" fill="none" stroke="#8a5a2a" stroke-width="2"/>
+  <g><rect x="22" y="42" width="22" height="18" rx="4" fill="#c0392b"/><rect x="178" y="42" width="22" height="18" rx="4" fill="#e3b657"/><circle cx="188" cy="38" r="9" fill="#8a5a2a"/><rect x="204" y="20" width="3" height="50" fill="#5a3418"/></g>
+  <circle cx="110" cy="64" r="7" fill="#c98d5c"/><path d="M104 56q6-9 12 0z" fill="#7a5230"/></svg>`;
+}
+function marketScene(){
+  const g=uid('k');
+  const house=(x,y,w,c)=>`<g><rect x="${x}" y="${y}" width="${w}" height="${w*.5}" fill="${c}"/><path d="M${x-8} ${y+2}L${x+w/2} ${y-w*.38}L${x+w+8} ${y+2}Z" fill="#5a3418"/><path d="M${x+6} ${y+w*.5}v${w*.5}M${x+w-6} ${y+w*.5}v${w*.5}" stroke="#3a2010" stroke-width="4"/><rect x="${x+w*.4}" y="${y+w*.14}" width="${w*.2}" height="${w*.22}" fill="#2a1408"/></g>`;
+  const sb=(x,y,s,c,col)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 26Q50 38 100 24L90 40Q50 46 10 40Z" fill="#6a3c1a"/><path d="M18 24Q50-16 82 24Z" fill="${c}" stroke="#8a5a2a" stroke-width="2"/><rect x="-6" y="16" width="14" height="10" rx="3" fill="${col}"/><rect x="92" y="14" width="12" height="12" rx="3" fill="#e3b657"/></g>`;
+  return `<svg class="art" viewBox="0 0 1000 562" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${sky(g+'s',[[0,'#8fcad2'],[.55,'#f4e4b4'],[1,'#f9eec6']])}${sky(g+'w',[[0,'#5aa0a0'],[1,'#2f6a70']])}</defs>
+  <rect width="1000" height="562" fill="url(#${g}s)"/><circle cx="820" cy="120" r="46" fill="#fff6c8" opacity=".85"/>
+  <g opacity=".6">${prang(250,300,210,'#c4b090','#9d8870')}${chedi(380,305,120,'#d6c8a6','#aea083')}${chedi(120,305,100,'#d6c8a6','#aea083')}</g>
+  <g fill="#6f9a58">${[40,200,380,560,760,940].map((x,i)=>`<ellipse cx="${x}" cy="${312+i%2*6}" rx="${100+i%3*18}" ry="${44+i%2*10}"/>`).join('')}</g>
+  <rect y="300" width="1000" height="262" fill="url(#${g}w)"/>
+  <g>${house(20,238,100,'#b88a54')}${house(150,252,80,'#a07848')}${house(260,246,90,'#b88a54')}${house(640,240,96,'#a07848')}${house(770,254,84,'#b88a54')}${house(890,244,96,'#a07848')}</g>
+  <g stroke="#bfe8e2" stroke-linecap="round" opacity=".5">${Array.from({length:26},(_,i)=>`<path d="M${(i*79)%980+10} ${330+(i*23)%200} h${30+(i*13)%50}" stroke-width="${1+i%2}"/>`).join('')}</g>
+  ${sb(60,350,1.1,'#d8b068','#c0392b')}${sb(250,430,1.3,'#c89a58','#2f6a3a')}${sb(560,360,1,'#e0c078','#e3b657')}${sb(780,430,1.2,'#d8b068','#c0392b')}${sb(400,350,.8,'#c89a58','#e3b657')}
+  <g>${[[120,356,'#c0392b'],[330,440,'#e3b657'],[640,366,'#2f6a3a'],[850,438,'#c0392b']].map(([x,y,c])=>`<ellipse cx="${x}" cy="${y}" rx="14" ry="9" fill="${c}"/><ellipse cx="${x+18}" cy="${y+2}" rx="11" ry="8" fill="#e3b657"/>`).join('')}</g>
+  </svg>`;
+}
+
+/* palace banner with vault doors (level 5) */
+function palaceScene(){
+  const g=uid('p');
+  const roof=(cx,by,w,h,c)=>`<path d="M${cx-w/2} ${by}Q${cx-w/2+w*.08} ${by-h*.25} ${cx-w*.07} ${by-h}L${cx+w*.07} ${by-h}Q${cx+w/2-w*.08} ${by-h*.25} ${cx+w/2} ${by}Z" fill="${c}"/><path d="M${cx-w*.07} ${by-h}L${cx+w*.07} ${by-h}" stroke="#ffd36a" stroke-width="3"/>`;
+  return `<svg class="art" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${sky(g+'s',[[0,'#2a2356'],[.6,'#a85a62'],[1,'#f0b060']])}${radial(g+'v',[[0,'#fff3b8',1],[.5,'#ffd36a',.8],[1,'#ff9a2a',0]])}</defs>
+  <rect width="1000" height="300" fill="url(#${g}s)"/>
+  <g fill="#fff" opacity=".8">${[[80,30],[200,60],[330,24],[600,40],[740,22],[880,56],[940,26]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6"/>`).join('')}</g>
+  ${chedi(120,270,150,'#c9a868','#8a6a3a')}${chedi(880,270,150,'#c9a868','#8a6a3a')}${chedi(240,270,100,'#c9a868','#8a6a3a')}${chedi(760,270,100,'#c9a868','#8a6a3a')}
+  <rect x="300" y="190" width="400" height="80" fill="#d8c8a0"/>${roof(500,190,440,50,'#a8321e')}<rect x="400" y="130" width="200" height="60" fill="#e8dab0"/>${roof(500,130,240,46,'#a8321e')}<rect x="456" y="76" width="88" height="54" fill="#e8dab0"/>${roof(500,76,130,40,'#c0392b')}<path d="M500 36v-26" stroke="#ffd36a" stroke-width="4"/>
+  <rect y="270" width="1000" height="30" fill="#2a1a10"/>
+  <circle cx="500" cy="232" r="70" fill="url(#${g}v)"/>
+  <path d="M446 270V214Q446 176 500 176Q554 176 554 214V270Z" fill="#2a1408" stroke="#e3b657" stroke-width="4"/>
+  <g class="dl"><path d="M450 270V216Q450 180 500 180V270Z" fill="#6a3c1a" stroke="#e3b657" stroke-width="3"/><g fill="#e3b657"><circle cx="470" cy="226" r="4"/><circle cx="470" cy="248" r="4"/><circle cx="486" cy="236" r="4"/></g></g>
+  <g class="dr"><path d="M550 270V216Q550 180 500 180V270Z" fill="#6a3c1a" stroke="#e3b657" stroke-width="3"/><g fill="#e3b657"><circle cx="530" cy="226" r="4"/><circle cx="530" cy="248" r="4"/><circle cx="514" cy="236" r="4"/></g></g>
+  </svg>`;
+}
+
+/* treasure chest (ending) */
+function chestSVG(){
+  const g=uid('c');
+  return `<svg class="chest" viewBox="0 0 300 230" aria-hidden="true"><defs>${radial(g,[[0,'#fff3b8',1],[.5,'#ffd36a',.6],[1,'#ffd36a',0]])}</defs>
+  <circle cx="150" cy="100" r="130" fill="url(#${g})"/>
+  <g fill="#fff3b8" opacity=".35"><polygon points="150,100 40,0 80,0"/><polygon points="150,100 140,-10 170,-10"/><polygon points="150,100 220,0 262,0"/></g>
+  <path d="M60 130h180v70q0 10-10 10H70q-10 0-10-10z" fill="#6a3c1a" stroke="#2e1708" stroke-width="4"/>
+  <path d="M60 130Q70 70 150 66Q230 70 240 130Z" fill="#8a5224" stroke="#2e1708" stroke-width="4"/>
+  <path d="M96 128Q104 78 150 70M204 128Q196 78 150 70" stroke="#e3b657" stroke-width="5" fill="none"/>
+  <rect x="60" y="126" width="180" height="12" fill="#e3b657" stroke="#2e1708" stroke-width="3"/><rect x="136" y="122" width="28" height="34" rx="5" fill="#e3b657" stroke="#2e1708" stroke-width="3"/><circle cx="150" cy="136" r="5" fill="#2e1708"/>
+  <g fill="#f0b82e" stroke="#9a6a10" stroke-width="2">${[[100,76],[130,60],[170,58],[200,74],[150,50],[118,88],[184,90]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="14" ry="6"/>`).join('')}</g>
+  <g fill="#fff3b8">${[[90,40],[210,36],[150,20],[260,90],[40,90]].map(([x,y])=>`<path d="M${x} ${y-8}l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>`).join('')}</g></svg>`;
+}
+
+/* goods icons for market + mini art */
+const GOODS=[
+  {id:'rice',name:'ข้าว',icon:'rice'},{id:'silk',name:'ผ้าไหม',icon:'silk'},
+  {id:'spice',name:'เครื่องเทศ',icon:'spice'},{id:'wood',name:'ไม้',icon:'wood'}
+];
+/* =====================================================================
+   CORE — state, audio, modals, shared screens
+   ===================================================================== */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pad=n=>String(n).padStart(2,'0');
+const fmtT=s=>`${pad(Math.floor(s/60))}:${pad(s%60)}`;
+const th=n=>String(n).replace(/\d/g,d=>d); // keep arabic digits (matches mockup)
+
+/* ---------- content ---------- */
+const LEVELS=[
+ {id:1,name:'วัดมหาธาตุ',title:'ร่องรอยแห่งวัดมหาธาตุ',kind:'maha',desc:'สำรวจซากวัดกลางเมืองหลวง ค้นหาเบาะแส แล้วจับคู่โบราณสถานให้ถูกต้อง'},
+ {id:2,name:'สมุดบันทึก',title:'รหัสลับสมุดบันทึก',kind:'diary',desc:'ถอดรหัสสัญลักษณ์โบราณในสมุดบันทึกของปู่ให้เป็นข้อความ'},
+ {id:3,name:'แผนที่หายไป',title:'แผนที่ที่หายไป',kind:'map',desc:'ประกอบแผนที่เกาะเมืองที่ถูกฉีกเป็น 6 ชิ้นให้ครบสมบูรณ์'},
+ {id:4,name:'ตลาดริมน้ำ',title:'วิกฤตตลาดริมน้ำ',kind:'market',desc:'วางแผนเส้นทางเรือสินค้าให้ทันพิธีใหญ่ภายใน 5 วัน'},
+ {id:5,name:'พระราชวัง',title:'ประตูพระคลังหลวง',kind:'palace',desc:'เรียงเหตุการณ์สำคัญของกรุงศรีอยุธยาเพื่อเปิดประตูพระคลัง'}
+];
+const ITEMS={
+ diary:{n:'หน้าสมุดบันทึกของปู่',ic:'scroll',d:'หน้ากระดาษเก่าที่ปู่เขียนตำนานความลับของกรุงศรีไว้ ลายมือเรียบร้อยแต่หมึกเริ่มจาง'},
+ compass:{n:'เข็มทิศทองเหลือง',ic:'compass',d:'เข็มทิศเก่าของปู่ ด้านในฝาสลักว่า “ตามน้ำไปให้ถึงใจกลางเมือง”'},
+ key:{n:'กุญแจสัมฤทธิ์โบราณ',ic:'key',d:'ได้มาหลังไขปริศนาที่วัดมหาธาตุ ยังไม่รู้ว่าใช้ไขอะไร แต่ดูสำคัญมาก'},
+ map:{n:'แผนที่เกาะเมืองฉบับสมบูรณ์',ic:'map',d:'แผนที่ที่ประกอบจนครบ แสดงแม่น้ำสามสายที่ล้อมเกาะเมืองไว้'},
+ seal:{n:'ตราประทับพ่อค้าหลวง',ic:'star',d:'หัวหน้าพ่อค้าที่ตลาดริมน้ำมอบให้ เพราะส่งสินค้าทันพิธี'}
+};
+const KN={
+ 1:{title:'วัดมหาธาตุ',kind:'maha',body:[
+  'วัดมหาธาตุเริ่มสร้างในรัชสมัยสมเด็จพระบรมราชาธิราชที่ 1 (ขุนหลวงพะงั่ว) เมื่อ พ.ศ. 1917 และสร้างต่อจนสำเร็จในสมัยสมเด็จพระราเมศวร',
+  'วัดตั้งอยู่ใจกลางพระนคร เป็นที่ประดิษฐานพระบรมสารีริกธาตุใต้ฐานพระปรางค์ประธาน เป็นที่พำนักของสมเด็จพระสังฆราช และใช้จัดพระราชพิธีสำคัญ',
+  'หลังเสียกรุงครั้งที่ 2 วัดถูกทิ้งร้าง เศียรพระพุทธรูปหินทรายที่ตกอยู่ถูกรากต้นโพธิ์โอบไว้ จนกลายเป็นภาพจำของพระนครศรีอยุธยา'],
+  fact:'เศียรพระพุทธรูปในรากไม้เป็นศิลปะอยุธยา ส่วนองค์พระหายไปแล้ว เชื่อกันว่าหล่นลงมาในช่วงเสียกรุง'},
+ 2:{title:'พระเจ้าปราสาททองและวัดไชยวัฒนาราม',kind:'chai',body:[
+  'พระเจ้าปราสาททองทรงสร้างวัดไชยวัฒนารามเมื่อ พ.ศ. 2173 เพื่ออุทิศถวายพระราชชนนี และเฉลิมพระเกียรติหลังชัยชนะต่อเมืองเขมร',
+  'พระปรางค์ประธานขนาดใหญ่ตั้งอยู่ตรงกลาง ล้อมด้วยปรางค์มุม ระเบียงคด และเมรุทิศเมรุราย ผู้เชี่ยวชาญตีความว่าเป็นภาพแทนจักรวาลตามคติความเชื่อ'],
+  fact:'รหัสในด่านนี้เรียกว่า “การเข้ารหัสแบบแทนที่อักษร” คือเปลี่ยนตัวอักษรแต่ละตัวเป็นสัญลักษณ์อื่นตามตารางลับ'},
+ 3:{title:'เกาะเมืองอยุธยา',kind:'map',body:[
+  'พระนครศรีอยุธยาตั้งอยู่บนเกาะที่ล้อมด้วยแม่น้ำ 3 สาย ได้แก่ แม่น้ำเจ้าพระยา แม่น้ำลพบุรี และแม่น้ำป่าสัก',
+  'แม่น้ำเป็นทั้งเส้นทางคมนาคม เส้นทางค้าขาย และเป็นปราการธรรมชาติที่ช่วยป้องกันข้าศึก'],
+  fact:'แผนที่ในเกมวาดแบบย่อเพื่อให้เล่นสนุก ตำแหน่งวัดจริงอาจต่างจากในภาพ'},
+ 4:{title:'ตลาดริมน้ำและการค้านานาชาติ',kind:'market',body:[
+  'กรุงศรีอยุธยาเป็นเมืองท่าสำคัญ มีพ่อค้าหลายชาติ เช่น จีน ญี่ปุ่น โปรตุเกส ฮอลันดา อังกฤษ ฝรั่งเศส และเปอร์เซีย เข้ามาค้าขายและตั้งชุมชนอยู่รอบเกาะเมือง',
+  'ผู้คนใช้เรือและแม่น้ำเป็นเส้นทางสัญจรหลัก ตลาดน้ำและท่าเรือจึงคึกคักตลอดทั้งวัน'],
+  fact:'สินค้าและชื่อเส้นทางในด่านนี้เป็นเกมจำลอง เพื่อฝึกวางแผนการขนส่ง'},
+ 5:{title:'พระราชวังหลวงและมรดกโลก',kind:'palace',body:[
+  'วัดพระศรีสรรเพชญ์เคยเป็นวัดในเขตพระราชวังหลวง มีเจดีย์ทรงระฆัง 3 องค์เรียงกันเป็นเอกลักษณ์ ใช้บรรจุพระบรมอัฐิของกษัตริย์อยุธยา',
+  'พ.ศ. 2534 ยูเนสโกขึ้นทะเบียน “นครประวัติศาสตร์พระนครศรีอยุธยา” เป็นมรดกโลก เพื่อให้คนรุ่นหลังช่วยกันรักษา'],
+  fact:'กรุงศรีอยุธยาเป็นราชธานีนานกว่า 400 ปี ตั้งแต่ พ.ศ. 1893 จนเสียกรุงครั้งที่ 2 ใน พ.ศ. 2310'}
+};
+const REWARD={
+ 1:{item:'key',clue:{t:'กุญแจสัมฤทธิ์',x:'เมื่อจับคู่วัดถูกทุกแห่ง ช่องลับในผนังอิฐก็เปิดออก ข้างในมีกุญแจสัมฤทธิ์โบราณ'}},
+ 2:{clue:{t:'ชื่อที่ซ่อนในรหัส',x:'ข้อความที่ถอดได้คือ “ปราสาททอง” ชื่อพระมหากษัตริย์ผู้สร้างวัดไชยวัฒนาราม ปู่คงอยากให้ตามหาแผนที่ต่อ'}},
+ 3:{item:'map',clue:{t:'แม่น้ำสามสาย',x:'แผนที่แสดงว่าเกาะเมืองถูกล้อมด้วยแม่น้ำเจ้าพระยา ลพบุรี และป่าสัก'}},
+ 4:{item:'seal',clue:{t:'ใจกลางการค้า',x:'หัวหน้าพ่อค้าบอกว่า พระคลังหลวงจะเปิดได้ก็ต่อเมื่อรู้ลำดับเหตุการณ์ของกรุงศรี'}},
+ 5:{}
+};
+const STORY=[
+ {who:'เรื่องเล่าจากสมุดบันทึก',t:'พ.ศ. 2310 กรุงศรีอยุธยาล่มสลาย แต่ผู้คนเล่าต่อกันมาว่าราชธานีแห่งนี้ซ่อนความลับสำคัญไว้ในที่ใดที่หนึ่ง'},
+ {who:'นักสำรวจ',t:'ปู่ของฉันเป็นนักโบราณคดี ท่านทิ้งสมุดบันทึกเล่มเก่าไว้ให้ พร้อมข้อความสั้น ๆ ว่า “ตามรอยกรุงศรีให้ครบห้าแห่ง แล้วความลับจะเปิดเผย”'},
+ {who:'นักสำรวจ',t:'ถึงเวลาออกเดินทางแล้ว! เริ่มต้นที่วัดมหาธาตุ ตามที่หน้าแรกของสมุดบอกไว้'}
+];
+const INTRO={
+ 1:'สมุดบันทึกบอกว่าเบาะแสแรกซ่อนอยู่ในซากวัดมหาธาตุ ลองคลิกสำรวจรอบ ๆ ให้ทั่ว ถ้าติดขัดให้กดปุ่มคำใบ้ได้ มี 3 ครั้งต่อด่าน',
+ 2:'หน้าถัดไปของสมุดเต็มไปด้วยสัญลักษณ์แปลก ๆ ปู่ใช้รหัสแทนที่ตัวอักษร ดูตารางถอดรหัสแล้วเติมตัวอักษรให้ครบทุกช่อง',
+ 3:'ในกล่องไม้มีแผนที่เกาะเมืองที่ถูกฉีกเป็น 6 ชิ้น ลากชิ้นส่วนไปวางให้ถูกตำแหน่ง ดูแนวแม่น้ำและชื่อวัดเป็นเบาะแส',
+ 4:'ที่ตลาดริมน้ำ พ่อค้าต้องการสินค้า 4 อย่างให้ทันพิธีภายใน 5 วัน เลือกเส้นทางเรือให้ได้สินค้าครบ',
+ 5:'ในที่สุดก็มาถึงพระราชวังหลวง ประตูพระคลังล็อกด้วยลำดับเหตุการณ์ในประวัติศาสตร์ เรียงจากเก่าสุดไปใหม่สุดให้ถูกต้อง'
+};
+
+/* ---------- save ---------- */
+const SAVE_KEY='ayutthaya-lost-secrets-v1';
+const dflt=()=>({done:{},items:[],clues:[],know:[],intro:false,music:true,sfx:true});
+let S=dflt();
+try{const j=localStorage.getItem(SAVE_KEY);if(j)S=Object.assign(dflt(),JSON.parse(j))}catch(e){}
+const save=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}};
+const total=()=>Object.values(S.done).reduce((a,d)=>a+d.score,0);
+const doneCount=()=>Object.keys(S.done).length;
+const unlocked=id=>id===1||!!S.done[id-1];
+const nextLevel=()=>{for(const l of LEVELS)if(!S.done[l.id])return l.id;return 5};
+
+/* ---------- audio (all synthesised, no files) ---------- */
+const AU={ctx:null,master:null,musG:null,timer:null,step:0,next:0};
+function actx(){
+  if(!AU.ctx){
+    try{const C=window.AudioContext||window.webkitAudioContext;AU.ctx=new C();AU.master=AU.ctx.createGain();AU.master.gain.value=.9;AU.master.connect(AU.ctx.destination);AU.musG=AU.ctx.createGain();AU.musG.gain.value=.55;AU.musG.connect(AU.master)}catch(e){return null}
+  }
+  if(AU.ctx.state==='suspended')AU.ctx.resume().catch(()=>{});
+  return AU.ctx;
+}
+function tone(f,t,d,o={}){
+  const c=AU.ctx;if(!c)return;
+  const {type='triangle',v=.14,bus='sfx',a=.006}=o;
+  const os=c.createOscillator(),g=c.createGain();
+  os.type=type;os.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  os.connect(g);g.connect(bus==='mus'?AU.musG:AU.master);os.start(t);os.stop(t+d+.05);
+}
+function sfx(n){
+  if(!S.sfx)return;const c=actx();if(!c)return;const t=c.currentTime;
+  try{switch(n){
+    case 'click':tone(560,t,.07,{type:'square',v:.03});break;
+    case 'ok':[523,659,784].forEach((f,i)=>tone(f,t+i*.09,.3,{v:.12}));break;
+    case 'bad':tone(190,t,.28,{type:'sawtooth',v:.06});tone(150,t+.12,.3,{type:'sawtooth',v:.06});break;
+    case 'find':[880,1175,1568].forEach((f,i)=>tone(f,t+i*.07,.4,{v:.08,type:'sine'}));break;
+    case 'place':tone(330,t,.12,{v:.12});tone(494,t+.06,.22,{v:.1});break;
+    case 'win':[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,t+i*.11,.45,{v:.12}));break;
+  }}catch(e){}
+}
+const SC=[0,2,4,7,9];
+const MEL=[4,3,2,3,4,2,1,2,3,2,0,1,2,1,0,-1,4,3,2,4,5,4,3,2,3,2,1,2,0,1,0,-2];
+const dfreq=d=>261.63*Math.pow(2,(SC[((d%5)+5)%5]+12*Math.floor(d/5))/12);
+function musicSched(){
+  const c=AU.ctx;if(!c)return;
+  while(AU.next<c.currentTime+.7){
+    const i=AU.step%MEL.length,f=dfreq(MEL[i]);
+    tone(f,AU.next,.95,{v:.06,bus:'mus'});tone(f*2,AU.next,.35,{v:.012,type:'sine',bus:'mus'});
+    if(i%8===0){tone(130.81,AU.next,3.6,{v:.05,type:'sine',bus:'mus'});tone(196,AU.next,3.6,{v:.03,type:'sine',bus:'mus'})}
+    AU.step++;AU.next+=.46;
+  }
+}
+function musicOn(){
+  if(!S.music)return;const c=actx();if(!c||AU.timer)return;
+  AU.next=c.currentTime+.1;AU.timer=setInterval(musicSched,200);musicSched();
+}
+function musicOff(){if(AU.timer){clearInterval(AU.timer);AU.timer=null}}
+
+/* ---------- toast, confetti, modal ---------- */
+function toast(msg){
+  $$('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2600);
+}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const cv=$('#confetti'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const cols=['#e3b657','#b9502a','#6fdc83','#f6dc95','#3f7c80','#ffffff'];
+  const P=Array.from({length:120},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.6,vx:rnd(-1.4,1.4),vy:rnd(2,5),r:rnd(5,10),a:rnd(0,6),va:rnd(-.2,.2),c:cols[Math.random()*cols.length|0]}));
+  let f=0;(function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=p.va;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/3,p.r,p.r*.6);ctx.restore()});
+    if(++f<190)requestAnimationFrame(loop);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+let MODAL=null;
+function modal(html,o={}){
+  const {cls='',key='',close=true,onClose=null,low=false}=o;
+  if(MODAL&&key&&MODAL.key===key){const m=$('.modal',MODAL.el);m.className='modal '+cls;m.innerHTML=html;MODAL.onClose=onClose;return}
+  closeModal(true);
+  const el=document.createElement('div');el.className='mback';
+  el.innerHTML=`<div class="modal ${cls}" role="dialog" aria-modal="true">${html}</div>`;
+  $('#modal-root').appendChild(el);
+  if(close)el.addEventListener('click',e=>{if(e.target===el)closeModal()});
+  MODAL={el,key,onClose};
+}
+function closeModal(silent){
+  if(!MODAL)return;const {el,onClose}=MODAL;MODAL=null;el.remove();
+  if(!silent&&onClose)onClose();
+}
+const mhead=(t)=>`<div class="mh"><h2>${t}</h2><button class="iconbtn round" data-act="close" aria-label="ปิด">${ico('close')}</button></div>`;
+
+/* ---------- dialogue ---------- */
+let DLG=null;
+function dialog(lines,done){DLG={lines,i:0,done};drawDlg()}
+function drawDlg(){
+  const {lines,i}=DLG,l=lines[i],last=i===lines.length-1;
+  modal(`<div class="dlg-in"><div class="face">${faceSVG()}</div><div style="min-width:0"><div class="who">${l.who}</div><div class="txt">${l.t}</div></div></div>
+   <div class="nav"><div class="dots">${lines.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
+   <div style="display:flex;gap:8px">${last?'':`<button class="btn wood" data-act="dskip">ข้าม</button>`}<button class="btn" data-act="dnext">${last?'ตกลง':'ถัดไป'}${ico('next')}</button></div></div>`,{cls:'dlg',key:'dlg',close:false});
+  const m=MODAL&&MODAL.el;if(m)m.style.alignItems='end';
+}
+function dlgEnd(){const d=DLG&&DLG.done;DLG=null;closeModal(true);if(d)d()}
+
+/* ---------- run state (one level attempt) ---------- */
+let R=null;
+const ST={sel:1};
+const LV={};   // per-level controllers: init(), render(), hint()
+const SCR={};
+const ACT={};
+const root=()=>$('#screens');
+
+function hud(title){
+  return `<header class="topbar"><button class="iconbtn round" data-act="backmap" aria-label="กลับไปแผนที่">${ico('back')}</button>
+  <div class="ribbon">${title}</div>
+  <div class="hud-r"><button class="iconbtn hintbtn" data-act="hint" ${R&&R.hints<=0?'disabled':''}>${ico('bulb')}<b>คำใบ้ (${R?R.hints:0})</b></button>
+  <button class="iconbtn round" data-act="notebook" aria-label="สมุดบันทึก">${ico('book')}</button>
+  <button class="iconbtn round" data-act="settings" aria-label="ตั้งค่า">${ico('gear')}</button></div></header>`;
+}
+function updHint(){const b=$('.hintbtn');if(!b)return;$('b',b).textContent=`คำใบ้ (${R.hints})`;b.disabled=R.hints<=0}
+function useHint(){R.hints--;R.used++;updHint()}
+
+function go(name,arg){
+  closeModal(true);DLG=null;
+  window.scrollTo({top:0});
+  SCR[name](arg);
+}
+
+/* ---------- start / finish a level ---------- */
+function startLevel(id){
+  if(!unlocked(id)){toast('ผ่านด่านก่อนหน้าเพื่อปลดล็อกด่านนี้');return}
+  ST.sel=id;
+  R={id,t0:Date.now(),hints:3,used:0,ok:0,bad:0,bonus:0};
+  LV[id].init();
+  LV[id].render();
+  window.scrollTo({top:0});
+  dialog([{who:`ด่านที่ ${id} : ${LEVELS[id-1].title}`,t:INTRO[id]}],()=>{});
+}
+function finishLevel(){
+  const id=R.id,secs=Math.round((Date.now()-R.t0)/1000),att=R.ok+R.bad,acc=att?R.ok/att:1;
+  let score=1000-R.bad*70-R.used*60+Math.max(0,240-Math.floor(secs/2))+R.bonus;
+  score=Math.max(300,Math.min(1500,Math.round(score)));
+  const stars=(acc>=.9&&R.used<=1)?3:acc>=.65?2:1;
+  const prev=S.done[id],best=!prev||score>prev.score;
+  const res={score,stars,secs,used:R.used,acc:Math.round(acc*100)};
+  if(best)S.done[id]={score,stars,secs,used:R.used,acc:res.acc};
+  const rw=REWARD[id]||{};
+  if(rw.item&&!S.items.includes(rw.item))S.items.push(rw.item);
+  if(rw.clue&&!S.clues.some(c=>c.t===rw.clue.t))S.clues.push(rw.clue);
+  if(!S.know.includes(id))S.know.push(id);
+  save();sfx('win');confetti();
+  showKnow(id,()=>showSummary(id,res,best,prev));
+}
+function showKnow(id,after){
+  const k=KN[id];
+  modal(`${mhead('ความรู้ด่านที่ '+id)}<div class="know"><div class="im">${scene(k.kind)}</div><div class="tx"><h3>${k.title}</h3>${k.body.map(p=>`<p>${p}</p>`).join('')}<div class="fact"><b>รู้หรือไม่?</b> ${k.fact}</div></div></div><div class="krow"><button class="btn" data-act="close">ปิด</button></div>`,{cls:'',close:false,onClose:after});
+}
+function showSummary(id,res,best,prev){
+  const last=id===5;
+  modal(`${mhead('สรุปผลการเล่น')}<div class="mb" style="display:grid;place-items:center"><div class="sum">
+   <div class="score" id="sc">0</div><div class="muted" style="margin-top:2px">คะแนนด่านนี้</div>
+   <div class="stars">${[1,2,3].map(i=>ico('star',i<=res.stars?'on':'off')).join('')}</div>
+   ${best&&prev?`<div class="bonus">สถิติใหม่! ดีกว่าเดิม ${prev.score}</div>`:''}
+   <div class="srow">${ico('clock')}<span>เวลาที่ใช้</span><b>${fmtT(res.secs)}</b></div>
+   <div class="srow">${ico('bulb')}<span>คำใบ้ที่ใช้</span><b>${res.used}/3</b></div>
+   <div class="srow">${ico('target')}<span>ความถูกต้อง</span><b>${res.acc}%</b></div>
+   <div class="srow">${ico('trophy')}<span>คะแนนรวมทั้งหมด</span><b>${total()}</b></div>
+   <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+    <button class="btn green lg block" data-act="${last?'ending':'nextlvl'}">${last?'ดูตอนจบ':'ไปด่านถัดไป'}${ico('next')}</button>
+    <div style="display:flex;gap:8px"><button class="btn wood block" data-act="replay">${ico('redo')}เล่นซ้ำ</button><button class="btn wood block" data-act="backmap">${ico('map')}แผนที่</button></div></div>
+  </div></div>`,{close:false,cls:'narrow'});
+  const el=$('#sc');let v=0;const step=Math.max(8,Math.round(res.score/40));
+  const iv=setInterval(()=>{v=Math.min(res.score,v+step);if(!el.isConnected){clearInterval(iv);return}el.textContent=v.toLocaleString('en-US');if(v>=res.score)clearInterval(iv)},24);
+}
+
+/* ---------- menu ---------- */
+SCR.menu=()=>{
+  R=null;
+  root().innerHTML=`<section class="screen menu" aria-label="หน้าแรก">${menuScene()}<div class="hero">${explorerSVG()}</div>${motes(16)}
+  <div class="tools"><button class="iconbtn round" data-act="tmusic" aria-label="เปิดหรือปิดเพลง">${ico(S.music?'music':'mute')}</button><button class="iconbtn round" data-act="tsfx" aria-label="เปิดหรือปิดเสียงเอฟเฟกต์">${ico(S.sfx?'sound':'mute')}</button></div>
+  <div class="center"><h1 class="title">ปริศนากู้กรุงศรี</h1><div class="subtitle">THE LOST SECRETS OF AYUTTHAYA</div>
+   <div class="btns"><button class="btn lg" data-act="start">${doneCount()?'เล่นต่อการผจญภัย':'เริ่มการผจญภัย'}</button><button class="btn moss" data-act="howto">วิธีเล่น</button><button class="btn moss" data-act="history">ประวัติศาสตร์</button><button class="btn moss" data-act="settings">ตั้งค่า</button></div></div>
+  <p class="tag" style="position:absolute;left:12px;right:12px;bottom:10px;text-align:center;margin:0">“เล่นสนุก ได้ความรู้ ไปให้ถึงปริศนากู้กรุงศรี”</p></section>`;
+};
+
+/* ---------- world map ---------- */
+SCR.map=()=>{
+  R=null;
+  if(!unlocked(ST.sel))ST.sel=nextLevel();
+  const L=LEVELS[ST.sel-1],cur=nextLevel(),d=S.done[ST.sel];
+  const pins=LEVELS.map((l,i)=>{
+    const st=S.done[l.id]?'done':!unlocked(l.id)?'locked':l.id===cur?'cur':'';
+    return `<button class="pin ${st} ${l.id===ST.sel?'sel':''}" style="left:${(PINS[i][0]/7.6).toFixed(2)}%;top:${(PINS[i][1]/4.6).toFixed(2)}%" data-act="pin" data-id="${l.id}" aria-label="ด่านที่ ${l.id} ${l.name}"><span class="med">${st==='locked'?ico('lock'):st==='done'?ico('check'):l.id}</span><span class="lab">ด่านที่ ${l.id}<small>${l.name}</small></span></button>`}).join('');
+  root().innerHTML=`<section class="screen"><header class="topbar"><button class="iconbtn round" data-act="menu" aria-label="กลับหน้าแรก">${ico('back')}</button><div class="ribbon">แผนที่กรุงศรีอยุธยา</div>
+  <div class="hud-r"><span class="pill" title="คะแนนรวม">${ico('star')}${total()}</span><span class="pill" title="ด่านที่ผ่านแล้ว">${ico('map')}${doneCount()}/5</span><button class="iconbtn round" data-act="notebook" aria-label="สมุดบันทึก">${ico('book')}</button><button class="iconbtn round" data-act="settings" aria-label="ตั้งค่า">${ico('gear')}</button></div></header>
+  <div class="mapwrap"><div class="mapbox">${mapSVG(false)}${pins}</div>
+  <aside class="paper sidecard"><div class="thumb">${scene(L.kind)}</div><h3>ด่านที่ ${L.id}<br>${L.name}</h3><p class="ink2" style="font-size:.92rem;line-height:1.55">${L.desc}</p>
+   <div class="stars">${[1,2,3].map(i=>ico('star',d&&i<=d.stars?'on':'off')).join('')}</div>${d?`<div class="ink2" style="font-size:.88rem">คะแนนสูงสุด ${d.score}</div>`:''}
+   <button class="btn block" data-act="startlvl" ${unlocked(L.id)?'':'disabled'}>${unlocked(L.id)?(d?'เล่นอีกครั้ง':'เริ่มด่าน'):'ยังล็อกอยู่'}</button></aside></div></section>`;
+};
+
+/* ---------- modals: notebook, settings, how-to, history ---------- */
+const NB={tab:'clue',sel:0};
+function notebook(){NB.sel=0;drawNB()}
+function drawNB(){
+  const tabs=[['clue','เบาะแส'],['item','ไอเทม'],['know','ความรู้']];
+  let list=[];
+  if(NB.tab==='clue')list=S.clues.map(c=>({t:c.t,x:c.x,ic:'search'}));
+  if(NB.tab==='item')list=S.items.map(i=>({t:ITEMS[i].n,x:ITEMS[i].d,ic:ITEMS[i].ic}));
+  if(NB.tab==='know')list=S.know.slice().sort().map(i=>({t:KN[i].title,x:KN[i].body.join('<br><br>'),ic:'temple'}));
+  if(NB.sel>=list.length)NB.sel=0;
+  const it=list[NB.sel],emptyMsg={clue:'ยังไม่พบเบาะแส ลองสำรวจฉากในแต่ละด่านดูนะ',item:'ยังไม่มีไอเทมในกระเป๋า',know:'ผ่านด่านเพื่อปลดล็อกความรู้ใหม่'}[NB.tab];
+  modal(`${mhead('สมุดบันทึกของปู่')}<div class="tabs">${tabs.map(([k,n])=>`<button class="tab ${NB.tab===k?'on':''}" data-act="nbtab" data-k="${k}">${n}</button>`).join('')}</div>
+  <div class="book"><div class="l">${list.length?list.map((e,i)=>`<button class="ent ${i===NB.sel?'on':''}" data-act="nbsel" data-i="${i}">${ico(e.ic)}<b>${NB.tab==='clue'?`เบาะแส ${i+1} : `:''}${e.t}</b></button>`).join(''):`<p class="empty-note">${emptyMsg}</p>`}</div>
+  <div class="r detail">${it?`${ico(it.ic,'big')}<h3>${it.t}</h3><p>${it.x}</p>`:`<p class="empty-note">${emptyMsg}</p>`}</div></div>`,{key:'nb'});
+}
+function settings(){
+  modal(`${mhead('ตั้งค่า')}<div class="mb"><div class="tgl"><span>เพลงประกอบ</span><button class="sw ${S.music?'on':''}" data-act="tmusic2" role="switch" aria-checked="${S.music}" aria-label="เพลงประกอบ"></button></div>
+  <div class="tgl"><span>เสียงเอฟเฟกต์</span><button class="sw ${S.sfx?'on':''}" data-act="tsfx2" role="switch" aria-checked="${S.sfx}" aria-label="เสียงเอฟเฟกต์"></button></div>
+  <div class="tgl" style="border:0"><span>ล้างความคืบหน้าทั้งหมด<br><small class="muted">คะแนน ไอเทม และความรู้จะหายไป</small></span><button class="btn wood" data-act="reset" id="rst">ล้างข้อมูล</button></div></div>`,{key:'set',cls:'narrow'});
+}
+function howto(){
+  modal(`${mhead('วิธีเล่น')}<div class="mb"><div class="steps">
+   <div class="step">${ico('search')}<h4>สำรวจ</h4><p>คลิกจุดเรืองแสงในฉากเพื่อเก็บเบาะแสและไอเทมลงสมุดบันทึก</p></div>
+   <div class="step">${ico('target')}<h4>ไขปริศนา</h4><p>ทุกด่านมีปริศนาไม่ซ้ำกัน ทั้งจับคู่ ถอดรหัส ประกอบแผนที่ วางแผนเส้นทาง และเรียงลำดับเวลา</p></div>
+   <div class="step">${ico('bulb')}<h4>ใช้คำใบ้</h4><p>มีคำใบ้ 3 ครั้งต่อด่าน ใช้แล้วคะแนนลดลงเล็กน้อย</p></div>
+   <div class="step">${ico('star')}<h4>เก็บดาว</h4><p>ตอบถูกโดยใช้คำใบ้น้อยจะได้ 3 ดาว กลับมาเล่นซ้ำเพื่อทำคะแนนให้ดีขึ้นได้</p></div></div>
+   <p class="muted" style="margin-top:12px;font-size:.92rem">เมื่อผ่านด่านจะได้อ่านหน้าความรู้ประวัติศาสตร์ และความคืบหน้าถูกบันทึกในเครื่องของคุณโดยอัตโนมัติ</p></div>`,{cls:'narrow'});
+}
+function history(){
+  modal(`${mhead('ประวัติศาสตร์')}<div class="mb"><p class="muted" style="margin-bottom:12px">ผ่านแต่ละด่านเพื่อปลดล็อกบทความ แตะการ์ดเพื่ออ่าน</p><div class="hgrid">${LEVELS.map(l=>{const ok=S.know.includes(l.id);return `<button class="hcard ${ok?'':'locked'}" data-act="${ok?'readk':'locked'}" data-id="${l.id}"><div class="hi">${scene(l.kind)}${ok?'':`<span class="lockic">${ico('lock')}</span>`}</div><div class="hb"><b>${ok?KN[l.id].title:'ยังไม่ปลดล็อก'}</b><small>ด่านที่ ${l.id}</small></div></button>`}).join('')}</div></div>`,{key:'hist'});
+}
+
+/* ---------- ending ---------- */
+SCR.ending=()=>{
+  R=null;const tt=total();
+  const rank=tt>=5200?'ผู้พิทักษ์กรุงศรี':tt>=4200?'นักโบราณคดีผู้เชี่ยวชาญ':'นักสำรวจผู้กล้า';
+  root().innerHTML=`<section class="screen"><div class="end">${chestSVG()}<h2>ความลับของกรุงศรีถูกเปิดเผยแล้ว</h2>
+  <p style="max-width:560px;margin:8px auto 0;line-height:1.7;color:var(--txt)">ในพระคลังไม่ได้มีแค่ทองคำ แต่มีบันทึกของปู่ที่เขียนไว้ว่า “ขุมทรัพย์ที่แท้จริงคือเรื่องราวของกรุงศรี ที่เราช่วยกันจดจำและรักษาต่อไป”</p>
+  <div style="margin-top:14px"><div class="muted">ฉายาของคุณ</div><div style="font:700 1.5rem var(--f-head);color:var(--gold2)">${rank}</div><div class="pill" style="margin-top:8px">${ico('star')}${tt.toLocaleString('en-US')} คะแนน</div></div>
+  <div class="badges">${LEVELS.map(l=>{const d=S.done[l.id]||{stars:0,score:0};return `<div class="badge"><b>ด่านที่ ${l.id}<br>${l.name}</b><div class="stars">${[1,2,3].map(i=>ico('star',i<=d.stars?'on':'off')).join('')}</div><small class="muted">${d.score}</small></div>`}).join('')}</div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn green" data-act="backmap">${ico('map')}เล่นด่านซ้ำเพื่อเก็บ 3 ดาว</button><button class="btn wood" data-act="menu">${ico('home')}กลับหน้าแรก</button></div></div></section>`;
+  setTimeout(confetti,300);
+};
+
+/* ---------- global actions ---------- */
+Object.assign(ACT,{
+  close:()=>closeModal(),
+  menu:()=>go('menu'),
+  backmap:()=>go('map'),
+  start:()=>{actx();musicOn();if(!S.intro){S.intro=true;save();dialog(STORY,()=>go('map'))}else go('map')},
+  howto,history,settings,notebook,
+  tmusic:el=>{S.music=!S.music;save();if(S.music)musicOn();else musicOff();el.innerHTML=ico(S.music?'music':'mute')},
+  tsfx:el=>{S.sfx=!S.sfx;save();el.innerHTML=ico(S.sfx?'sound':'mute')},
+  tmusic2:()=>{S.music=!S.music;save();if(S.music)musicOn();else musicOff();settings()},
+  tsfx2:()=>{S.sfx=!S.sfx;save();settings()},
+  reset:el=>{if(el.dataset.sure){S=dflt();save();closeModal(true);go('menu');toast('ล้างข้อมูลแล้ว')}else{el.dataset.sure=1;el.textContent='กดอีกครั้งเพื่อยืนยัน';el.classList.remove('wood')}},
+  dnext:()=>{if(!DLG)return;if(DLG.i>=DLG.lines.length-1)dlgEnd();else{DLG.i++;drawDlg()}},
+  dskip:()=>dlgEnd(),
+  nbtab:el=>{NB.tab=el.dataset.k;NB.sel=0;drawNB()},
+  nbsel:el=>{NB.sel=+el.dataset.i;drawNB()},
+  pin:el=>{ST.sel=+el.dataset.id;SCR.map()},
+  startlvl:()=>startLevel(ST.sel),
+  nextlvl:()=>{closeModal(true);startLevel(Math.min(5,R?R.id+1:nextLevel()))},
+  replay:()=>{const id=R.id;closeModal(true);startLevel(id)},
+  ending:()=>go('ending'),
+  readk:el=>showKnow(+el.dataset.id,()=>history()),
+  locked:()=>toast('ผ่านด่านที่เกี่ยวข้องเพื่อปลดล็อก'),
+  hint:()=>{
+    if(!R)return;
+    if(R.hints<=0){toast('คำใบ้หมดแล้วสำหรับด่านนี้');return}
+    if(LV[R.id].hint()!==false){useHint()}
+  }
+});
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el||el.disabled)return;
+  const fn=ACT[el.dataset.act];if(!fn)return;
+  if(!['spot'].includes(el.dataset.act))sfx('click');
+  fn(el,e);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&MODAL&&MODAL.key!=='dlg')closeModal()});
+/* =====================================================================
+   LEVELS
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ L1 */
+const SPOTS=[
+ {id:'head',x:50,y:53,t:'เศียรพระในรากไม้',x2:'เศียรพระพุทธรูปหินทราย (ศิลปะอยุธยา) ถูกรากต้นโพธิ์โอบไว้ นี่คือจุดที่ปู่วงกลมเอาไว้ในสมุดบันทึก'},
+ {id:'prang',x:80,y:34,t:'พระปรางค์ประธาน',x2:'ใต้ฐานพระปรางค์ประธานเคยบรรจุพระบรมสารีริกธาตุ แสดงว่าวัดนี้สำคัญมากในสมัยอยุธยา'},
+ {id:'wall',x:19,y:68,t:'จารึกบนผนังอิฐ',x2:'ข้อความสลักไว้ว่า “ผู้ใดรู้จักวัดทั้งสี่ได้ถูกต้อง ผู้นั้นย่อมเปิดทางสู่ความลับ”'},
+ {id:'page',x:33,y:89,t:'หน้าสมุดบันทึกของปู่',x2:'หน้านี้เขียนว่า ความลับของกรุงศรีกระจายอยู่ในสถานที่ห้าแห่ง และปู่ซ่อนชื่อสำคัญไว้ในรหัสบนหน้าถัดไป',item:'diary'},
+ {id:'box',x:72,y:87,t:'กล่องไม้ใต้รากไม้',x2:'ในกล่องมีเข็มทิศทองเหลืองของปู่ ที่ด้านในฝาสลักว่า “ตามน้ำไปให้ถึงใจกลางเมือง”',item:'compass'}
+];
+const TEMPLES=[
+ {n:'วัดพระศรีสรรเพชญ์',k:'sri',d:'วัดหลวงในเขตพระราชวัง มีเจดีย์ทรงระฆัง 3 องค์เรียงกันเป็นเอกลักษณ์'},
+ {n:'วัดไชยวัฒนาราม',k:'chai',d:'วัดริมแม่น้ำเจ้าพระยา สร้างโดยพระเจ้าปราสาททอง มีปรางค์ประธานขนาดใหญ่'},
+ {n:'วัดมหาธาตุ',k:'maha',d:'วัดกลางเมืองที่มีเศียรพระพุทธรูปหินทรายอยู่ในรากต้นโพธิ์'},
+ {n:'วัดโลกยสุธาราม',k:'loka',d:'วัดที่มีพระพุทธไสยาสน์องค์ใหญ่ประดิษฐานกลางแจ้ง'}
+];
+const slotsHTML=(newId)=>{const its=S.items.slice(0,4);return Array.from({length:4},(_,i)=>its[i]?`<div class="slot ${its[i]===newId?'new':''}" title="${ITEMS[its[i]].n}">${ico(ITEMS[its[i]].ic)}</div>`:`<div class="slot empty"></div>`).join('')};
+LV[1]={
+ init(){R.phase='explore';R.found=[]},
+ render(){R.phase==='explore'?renderExplore():renderMatch()},
+ hint(){
+  if(R.phase==='explore'){
+   const left=SPOTS.filter(s=>!R.found.includes(s.id));
+   if(!left.length){toast('พบเบาะแสครบแล้ว ไปไขปริศนาได้เลย');return false}
+   const s=left[Math.random()*left.length|0],b=$(`.hs[data-id="${s.id}"]`);
+   b.classList.add('hint');setTimeout(()=>b&&b.classList.remove('hint'),3600);toast('ดูที่จุดสีขาวที่กะพริบอยู่');return true;
+  }
+  const open=[0,1,2,3].filter(i=>!R.lock[i]);
+  if(!open.length||R.busy)return false;
+  const i=open[Math.random()*open.length|0],k=R.order.indexOf(i);
+  R.links=R.links.map(v=>v===k?-1:v);R.links[i]=k;R.lock[i]=true;R.res[i]='ok';R.selL=null;sfx('ok');refreshMatch();
+  if(R.lock.every(Boolean)){R.busy=true;setTimeout(finishLevel,900)}
+  return true;
+ }
+};
+function renderExplore(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 1 : ร่องรอยแห่งวัดมหาธาตุ')}
+  <div class="lvl one"><div class="col"><div class="scenewrap"><div class="scene" id="scene">${ruinScene()}${motes(10)}
+   ${SPOTS.map(s=>`<button class="hs" data-act="spot" data-id="${s.id}" style="left:${s.x}%;top:${s.y}%" aria-label="${s.t}"></button>`).join('')}
+   <div class="caption">${ico('search')}คลิกสำรวจวัตถุต่าง ๆ เพื่อค้นหาเบาะแส</div><div id="ctaw"></div></div>
+   <div class="invbar" id="inv"></div></div>
+   <div class="panel"><div class="stat-row"><span>เบาะแสที่พบ</span><b id="fc"></b></div><div class="meter" style="margin-block:6px"><i id="fm"></i></div><p class="muted" id="fh" style="font-size:.9rem"></p></div></div></div></section>`;
+  updExplore();
+}
+function updExplore(newItem){
+  const n=R.found.length;
+  $('#fc').textContent=n+' / 5';$('#fm').style.width=n*20+'%';
+  $('#fh').textContent=n<3?'พบอย่างน้อย 3 จุดเพื่อปลดล็อกปริศนา และพบครบ 5 จุดรับโบนัส +100 คะแนน':n<5?'ปลดล็อกปริศนาแล้ว ยังมีจุดซ่อนอีก หาให้ครบเพื่อรับโบนัส':'พบครบทุกจุดแล้ว รับโบนัส +100 คะแนน';
+  $$('.hs').forEach(b=>{const f=R.found.includes(b.dataset.id);b.classList.toggle('found',f);b.innerHTML=ico(f?'check':'search')});
+  $('#inv').innerHTML=slotsHTML(newItem);
+  $('#ctaw').innerHTML=n>=3?`<button class="btn lg cta pulse" data-act="tomatch">${ico('temple')}ไขปริศนา : จับคู่โบราณสถาน</button>`:'';
+}
+function clueCard(s,first){
+  const sc=$('#scene');$$('.cluecard',sc).forEach(x=>x.remove());
+  const it=s.item?ITEMS[s.item]:null,d=document.createElement('div');
+  d.className='paper cluecard';
+  d.innerHTML=`<div class="ic">${ico(it?it.ic:'search')}</div><div><h4>${s.t}</h4><p>${s.x2}</p>${it&&first?`<p style="color:#256a38;font-weight:700;margin-top:4px">ได้รับไอเทม : ${it.n}</p>`:''}</div><button class="x" data-act="xcard" aria-label="ปิด">${ico('close')}</button>`;
+  sc.appendChild(d);
+}
+Object.assign(ACT,{
+  spot:el=>{
+    const s=SPOTS.find(x=>x.id===el.dataset.id),first=!R.found.includes(s.id);
+    if(first){
+      R.found.push(s.id);sfx('find');
+      if(!S.clues.some(c=>c.t===s.t))S.clues.push({t:s.t,x:s.x2});
+      if(s.item&&!S.items.includes(s.item))S.items.push(s.item);
+      save();
+      if(R.found.length===5){R.bonus=100;setTimeout(()=>toast('พบเบาะแสครบ 5 จุด! โบนัส +100'),700)}
+    }else sfx('click');
+    updExplore(first?s.item:null);clueCard(s,first);
+  },
+  xcard:el=>el.closest('.cluecard').remove(),
+  tomatch:()=>{
+    R.phase='match';R.order=shuffle([0,1,2,3]);R.links=[-1,-1,-1,-1];R.lock=[false,false,false,false];R.res=[];R.selL=null;R.busy=false;
+    renderMatch();window.scrollTo({top:0});
+  },
+  mL:el=>{
+    const i=+el.dataset.i;if(R.busy||R.lock[i])return;
+    if(R.selL===i){R.selL=null}else{R.selL=i;R.links[i]=-1;R.res[i]=undefined}
+    refreshMatch();
+  },
+  mR:el=>{
+    const k=+el.dataset.k;if(R.busy)return;
+    const owner=R.links.indexOf(k);
+    if(R.selL!==null){
+      if(owner>=0&&R.lock[owner]){toast('คำอธิบายนี้จับคู่ถูกแล้ว');return}
+      if(owner>=0){R.links[owner]=-1;R.res[owner]=undefined}
+      R.links[R.selL]=k;R.res[R.selL]=undefined;R.selL=null;sfx('place');
+    }else if(owner>=0&&!R.lock[owner]){R.links[owner]=-1;R.res[owner]=undefined}
+    refreshMatch();
+  },
+  mcheck:()=>{
+    if(R.busy)return;let good=0,wrong=0;
+    R.links.forEach((k,i)=>{if(R.lock[i])return;if(R.order[k]===i){R.lock[i]=true;R.res[i]='ok';good++}else{R.res[i]='bad';wrong++}});
+    R.ok+=good;R.bad+=wrong;refreshMatch();
+    if(wrong){
+      sfx('bad');R.busy=true;
+      setTimeout(()=>{R.links.forEach((k,i)=>{if(R.res[i]==='bad'){R.links[i]=-1;R.res[i]=undefined}});R.busy=false;refreshMatch()},1200);
+    }else sfx('ok');
+    if(R.lock.every(Boolean)){R.busy=true;setTimeout(finishLevel,1000)}
+  }
+});
+function renderMatch(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 1 : จับคู่โบราณสถาน')}<div class="lvl one"><div class="paper board">
+  <p class="lead">แตะชื่อวัดทางซ้าย แล้วแตะคำอธิบายทางขวาเพื่อจับคู่ จากนั้นกด “ตรวจคำตอบ”</p>
+  <div class="match" id="match">${[0,1,2,3].map(i=>`<button class="cell L" data-act="mL" data-i="${i}"><span class="ti">${scene(TEMPLES[i].k)}</span><b>${TEMPLES[i].n}</b><i class="dot"></i></button><div class="gap"></div><button class="cell R" data-act="mR" data-k="${i}"><span>${TEMPLES[R.order[i]].d}</span><i class="dot"></i></button>`).join('')}<svg class="lines" aria-hidden="true"></svg></div>
+  <div class="row-btns" style="margin-top:14px"><button class="btn lg" id="chk" data-act="mcheck" disabled>ตรวจคำตอบ</button></div></div></div></section>`;
+  refreshMatch();
+}
+function refreshMatch(){
+  const m=$('#match');if(!m)return;
+  $$('.cell.L',m).forEach(c=>{const i=+c.dataset.i;c.classList.toggle('sel',R.selL===i);c.classList.toggle('linked',R.links[i]>=0&&!R.res[i]);c.classList.toggle('ok',R.res[i]==='ok');c.classList.toggle('bad',R.res[i]==='bad')});
+  $$('.cell.R',m).forEach(c=>{const k=+c.dataset.k,i=R.links.indexOf(k);c.classList.toggle('linked',i>=0&&!R.res[i]);c.classList.toggle('ok',i>=0&&R.res[i]==='ok');c.classList.toggle('bad',i>=0&&R.res[i]==='bad')});
+  $('#chk').disabled=!(R.links.every(k=>k>=0)&&R.lock.some(l=>!l));
+  drawLines();
+}
+function drawLines(){
+  const m=$('#match');if(!m||!R||R.id!==1||R.phase!=='match')return;
+  const mr=m.getBoundingClientRect();let d='';
+  R.links.forEach((k,i)=>{
+    if(k<0)return;
+    const a=$(`.cell.L[data-i="${i}"] .dot`,m).getBoundingClientRect(),b=$(`.cell.R[data-k="${k}"] .dot`,m).getBoundingClientRect();
+    const x1=a.left+a.width/2-mr.left,y1=a.top+a.height/2-mr.top,x2=b.left+b.width/2-mr.left,y2=b.top+b.height/2-mr.top,mx=(x1+x2)/2;
+    d+=`<path class="${R.res[i]||''}" d="M${x1.toFixed(1)} ${y1.toFixed(1)}C${mx.toFixed(1)} ${y1.toFixed(1)} ${mx.toFixed(1)} ${y2.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}"/>`;
+  });
+  $('svg.lines',m).innerHTML=d;
+}
+addEventListener('resize',()=>drawLines());
+
+/* ------------------------------------------------------------------ L2 */
+const CIPH={map:['ท','ง','ป','ก','า','ร','ม','ส','ว','อ','ต','น'],ans:'ปราสาททอง'};
+const cEnc=()=>[...CIPH.ans].map(c=>CIPH.map.indexOf(c));
+LV[2]={
+ init(){R.slots=Array(9).fill('');R.lock=Array(9).fill(false);R.sel=0;R.res=[];R.busy=false},
+ render(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 2 : รหัสลับสมุดบันทึก')}<div class="cipher">
+  <div class="paper msg"><h3>ข้อความลับในสมุดบันทึก</h3><p class="ink2" style="font-size:.9rem">สัญลักษณ์ที่ปู่เขียนไว้ อ่านจากซ้ายไปขวา</p>
+   <div class="glyphs">${cEnc().map(i=>`<div class="glyph">${glyph(i)}</div>`).join('')}</div>
+   <h3>จดอักษรข้อความต่อไปนี้</h3><div class="slots-row" id="slots"></div>
+   <div class="row-btns"><button class="btn wood" data-act="cdel">ลบ</button><button class="btn lg" data-act="cchk">ตรวจคำตอบ</button></div></div>
+  <div class="paper msg"><h3>ตารางถอดรหัส</h3><p class="ink2" style="font-size:.9rem">แตะตัวอักษรที่ตรงกับสัญลักษณ์ เพื่อเติมลงในช่องที่เลือก หรือพิมพ์จากคีย์บอร์ดก็ได้</p>
+   <div class="keygrid">${CIPH.map.map((ch,i)=>`<button class="key" data-act="ckey" data-ch="${ch}" aria-label="สัญลักษณ์ ${i+1} คือ ${ch}">${glyph(i)}<b>${ch}</b></button>`).join('')}</div></div></div></section>`;
+  drawSlots();
+ },
+ hint(){
+  const i=R.slots.findIndex((c,k)=>!R.lock[k]);
+  if(i<0||R.busy)return false;
+  R.slots[i]=CIPH.ans[i];R.lock[i]=true;R.res[i]='ok';R.sel=nextOpen(i);drawSlots();sfx('ok');cipherDone();return true;
+ }
+};
+function drawSlots(){
+  const enc=cEnc(),el=$('#slots');if(!el)return;
+  el.innerHTML=R.slots.map((ch,i)=>`<button class="sl ${R.sel===i?'sel':''} ${R.res[i]||''}" data-act="cslot" data-i="${i}" aria-label="ช่องที่ ${i+1}">${glyph(enc[i])}<b>${ch}</b></button>`).join('');
+}
+const nextOpen=from=>{for(let k=1;k<=9;k++){const j=(from+k)%9;if(!R.lock[j]&&!R.slots[j])return j}for(let k=0;k<9;k++)if(!R.lock[k])return k;return from};
+function fillSlot(ch){
+  if(R.busy)return;
+  let i=R.sel;if(R.lock[i]){i=R.slots.findIndex((c,k)=>!R.lock[k]&&!c);if(i<0)i=R.slots.findIndex((c,k)=>!R.lock[k]);if(i<0)return}
+  R.slots[i]=ch;R.res[i]=undefined;R.sel=nextOpen(i);if(R.lock[R.sel])R.sel=i;sfx('place');drawSlots();
+}
+function cipherDone(){
+  if(!R.lock.every(Boolean))return;R.busy=true;
+  setTimeout(()=>dialog([{who:'นักสำรวจ',t:'ตัวอักษรเรียงเป็นคำว่า “ปราสาททอง” คือพระเจ้าปราสาททอง ผู้สร้างวัดไชยวัฒนาราม! ปู่คงอยากให้ตามหาแผนที่ต่อ'}],finishLevel),800);
+}
+Object.assign(ACT,{
+  cslot:el=>{R.sel=+el.dataset.i;drawSlots()},
+  ckey:el=>fillSlot(el.dataset.ch),
+  cdel:()=>{if(R.busy)return;let i=R.sel;if(R.lock[i]||!R.slots[i]){for(let k=8;k>=0;k--)if(!R.lock[k]&&R.slots[k]){i=k;break}}if(!R.lock[i]){R.slots[i]='';R.res[i]=undefined;R.sel=i}drawSlots()},
+  cchk:()=>{
+    if(R.busy)return;
+    if(R.slots.some((c,i)=>!c&&!R.lock[i])){toast('เติมตัวอักษรให้ครบทุกช่องก่อนนะ');return}
+    let wrong=0;
+    R.slots.forEach((c,i)=>{if(R.lock[i])return;if(c===CIPH.ans[i]){R.lock[i]=true;R.res[i]='ok'}else{R.res[i]='bad';wrong++}});
+    drawSlots();
+    if(wrong){
+      R.bad++;sfx('bad');R.busy=true;
+      setTimeout(()=>{R.slots.forEach((c,i)=>{if(R.res[i]==='bad'){R.slots[i]='';R.res[i]=undefined}});R.sel=nextOpen(0);R.busy=false;drawSlots()},1100);
+    }else{R.ok++;sfx('ok');cipherDone()}
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!R||R.id!==2||MODAL||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.key==='Backspace'){ACT.cdel();e.preventDefault()}
+  else if(e.key==='ArrowLeft'){R.sel=(R.sel+8)%9;drawSlots()}
+  else if(e.key==='ArrowRight'){R.sel=(R.sel+1)%9;drawSlots()}
+  else if(e.key.length===1&&CIPH.map.includes(e.key)){fillSlot(e.key)}
+});
+
+/* ------------------------------------------------------------------ L3 */
+const MW=760,MH=460;
+const pieceSVG=p=>{const c=p%3,r=Math.floor(p/3);return `<svg viewBox="${c*MW/3} ${r*MH/2} ${MW/3} ${MH/2}" preserveAspectRatio="none" aria-hidden="true">${worldMap(true)}</svg>`};
+LV[3]={
+ init(){R.order=shuffle([0,1,2,3,4,5]);R.placed=Array(6).fill(-1);R.selP=null},
+ render(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 3 : แผนที่ที่หายไป')}<div class="puz3">
+  <div class="col"><div class="panel"><h3>แผนที่กรุงศรีอยุธยา</h3><p class="muted" style="font-size:.9rem;margin:2px 0 8px">ลากชิ้นส่วนแผนที่มาประกอบให้ถูกต้อง หรือแตะชิ้นส่วนแล้วแตะช่องที่ต้องการ</p>
+   <div class="mboard" id="mboard">${[0,1,2,3,4,5].map(s=>`<button class="mslot" data-act="mslot" data-s="${s}" aria-label="ช่องที่ ${s+1}"></button>`).join('')}</div></div></div>
+  <div class="col"><div class="panel"><h3>ชิ้นส่วนแผนที่</h3><div class="tray" id="tray" style="margin-top:8px">${R.order.map(p=>`<div class="piece" data-p="${p}">${pieceSVG(p)}</div>`).join('')}</div></div></div></div></section>`;
+ },
+ hint(){
+  const left=R.placed.map((v,i)=>v<0?i:-1).filter(i=>i>=0);
+  if(!left.length)return false;
+  place(left[Math.random()*left.length|0],false);return true;
+ }
+};
+function markSel(){$$('.piece').forEach(p=>p.classList.toggle('sel',R.selP!==null&&+p.dataset.p===R.selP))}
+function place(p,count=true){
+  R.placed[p]=p;
+  const sl=$(`.mslot[data-s="${p}"]`);sl.innerHTML=pieceSVG(p);sl.classList.add('ok');
+  $(`.piece[data-p="${p}"]`).classList.add('used');
+  R.selP=null;markSel();sfx('place');if(count)R.ok++;
+  if(R.placed.every(v=>v>=0)){R.busy=true;sfx('ok');setTimeout(finishLevel,1100)}
+}
+function tryPlace(p,s){
+  if(R.busy||R.placed[s]>=0)return;
+  if(p===s)place(p);
+  else{
+    R.bad++;sfx('bad');const sl=$(`.mslot[data-s="${s}"]`);sl.classList.remove('shake');void sl.offsetWidth;sl.classList.add('shake');
+    R.selP=null;markSel();toast('ชิ้นนี้ยังไม่ใช่ตำแหน่งนี้ ลองดูแนวแม่น้ำและชื่อวัด');
+  }
+}
+let DR=null;
+const slotAt=(x,y)=>{const el=document.elementFromPoint(x,y);return el&&el.closest?el.closest('.mslot'):null};
+document.addEventListener('pointerdown',e=>{
+  const p=e.target.closest&&e.target.closest('.piece');
+  if(!p||!R||R.id!==3||R.busy||p.classList.contains('used'))return;
+  e.preventDefault();const r=p.getBoundingClientRect();
+  DR={p,id:+p.dataset.p,ox:e.clientX-r.left,oy:e.clientY-r.top,sx:e.clientX,sy:e.clientY,moved:false,g:null,w:r.width,h:r.height};
+});
+document.addEventListener('pointermove',e=>{
+  if(!DR)return;
+  if(!DR.moved&&Math.hypot(e.clientX-DR.sx,e.clientY-DR.sy)>7){
+    DR.moved=true;const g=DR.p.cloneNode(true);g.className='ghost';g.style.width=DR.w+'px';g.style.height=DR.h+'px';document.body.appendChild(g);DR.g=g;DR.p.style.opacity='.35';
+  }
+  if(DR.moved){
+    DR.g.style.left=(e.clientX-DR.ox)+'px';DR.g.style.top=(e.clientY-DR.oy)+'px';
+    const s=slotAt(e.clientX,e.clientY);$$('.mslot').forEach(x=>x.classList.toggle('hot',x===s&&!x.classList.contains('ok')));
+  }
+});
+const endDrag=(e,cancel)=>{
+  if(!DR)return;const d=DR;DR=null;d.p.style.opacity='';if(d.g)d.g.remove();$$('.mslot.hot').forEach(x=>x.classList.remove('hot'));
+  if(cancel)return;
+  if(d.moved){const s=slotAt(e.clientX,e.clientY);if(s)tryPlace(d.id,+s.dataset.s)}
+  else{R.selP=R.selP===d.id?null:d.id;markSel();sfx('click')}
+};
+document.addEventListener('pointerup',e=>endDrag(e,false));
+document.addEventListener('pointercancel',e=>endDrag(e,true));
+ACT.mslot=el=>{
+  if(R.selP===null){toast('เลือกชิ้นส่วนแผนที่ก่อน แล้วค่อยแตะช่อง');return}
+  tryPlace(R.selP,+el.dataset.s);
+};
+
+/* ------------------------------------------------------------------ L4 */
+const GN={rice:'ข้าว',silk:'ผ้าไหม',spice:'เครื่องเทศ',wood:'ไม้'};
+const NEED={rice:3,silk:2,spice:2,wood:2},LIMIT=5;
+const ROUTES=[
+ {id:'N',n:'เส้นทางเหนือ',days:2,g:{rice:3,wood:1},note:'ล่องขึ้นไปทางแม่น้ำลพบุรี'},
+ {id:'E',n:'เส้นทางตะวันออก',days:3,g:{silk:2,spice:2,wood:1},note:'ล่องไปทางแม่น้ำป่าสัก'},
+ {id:'W',n:'เส้นทางตะวันตก',days:2,g:{wood:2,rice:1},note:'ล่องไปทางแม่น้ำเจ้าพระยาตอนบน'},
+ {id:'S',n:'เส้นทางใต้',days:3,g:{spice:2,rice:1,silk:1},note:'ล่องลงไปทางปากน้ำ'}
+];
+const tally=()=>{const t={rice:0,silk:0,spice:0,wood:0};let d=0;R.sel.forEach(id=>{const r=ROUTES.find(x=>x.id===id);d+=r.days;for(const k in r.g)t[k]+=r.g[k]});return {t,d}};
+LV[4]={
+ init(){R.sel=[];R.sail=false;R.h4=0},
+ render(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 4 : วิกฤตตลาดริมน้ำ')}<div class="market">
+  <div class="col"><div class="scene" id="mscene">${marketScene()}<div class="boat" id="boat">${boatSVG()}</div></div>
+   <div class="paper" style="padding:12px"><h3>เลือกเส้นทางเรือ</h3><p class="ink2" style="font-size:.9rem;margin-bottom:8px">เลือกได้หลายเส้นทาง แต่เวลารวมต้องไม่เกิน ${LIMIT} วัน และสินค้าต้องครบตามรายการ</p>
+   <div class="routes">${ROUTES.map(r=>`<button class="route" data-act="rt" data-id="${r.id}" aria-pressed="false"><span class="rd">${ico('check')}</span><span><b>${r.n} <span class="days">(ใช้เวลา ${r.days} วัน)</span></b><small>${r.note}<br>ได้ ${Object.entries(r.g).map(([k,v])=>`${GN[k]} ×${v}`).join(' · ')}</small></span></button>`).join('')}</div></div></div>
+  <aside class="col"><div class="panel"><h3>รายการสินค้า</h3><div class="goods" style="margin-top:8px">${GOODS.map(g=>`<div class="good" id="g-${g.id}"><span class="gi">${ico(g.icon)}</span><b>${g.name}</b><span class="cnt">0/${NEED[g.id]}</span></div>`).join('')}</div>
+   <div class="stat-row" style="margin-top:12px"><span>เวลาที่ใช้</span><b id="days"></b></div><div class="meter" style="margin-top:4px"><i id="dm"></i></div>
+   <div id="res" style="margin-top:10px"></div><button class="btn lg block" id="go" data-act="sail" style="margin-top:10px" disabled>${ico('boat')}เริ่มขนส่ง</button></div></aside></div></section>`;
+  updMarket();
+ },
+ hint(){
+  R.h4++;
+  if(R.h4===1){toast('ผ้าไหมต้องใช้ 2 ชิ้น และมีเส้นทางเดียวที่ได้ผ้าไหมครบในรอบเดียว');return true}
+  const id=R.h4===2?'E':'N',b=$(`.route[data-id="${id}"]`);
+  b.classList.add('hint');setTimeout(()=>b.classList.remove('hint'),3600);
+  toast(R.h4===2?'ลองดูเส้นทางที่กะพริบ':'เส้นทางเหนือ + ตะวันออก รวม 5 วัน ได้สินค้าครบพอดี');return true;
+ }
+};
+function updMarket(){
+  const {t,d}=tally();
+  GOODS.forEach(g=>{const el=$('#g-'+g.id);$('.cnt',el).textContent=`${t[g.id]}/${NEED[g.id]}`;el.classList.toggle('met',t[g.id]>=NEED[g.id]);el.classList.toggle('over',t[g.id]>NEED[g.id]);el.classList.remove('shortage')});
+  $('#days').textContent=`${d} / ${LIMIT} วัน`;$('#days').style.color=d>LIMIT?'#ff9a7a':'';$('#dm').style.width=Math.min(100,d/LIMIT*100)+'%';
+  $$('.route').forEach(b=>{const on=R.sel.includes(b.dataset.id);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  $('#go').disabled=R.sail||!R.sel.length;
+}
+Object.assign(ACT,{
+  rt:el=>{
+    if(R.sail)return;const id=el.dataset.id,i=R.sel.indexOf(id);
+    if(i>=0)R.sel.splice(i,1);else R.sel.push(id);
+    $('#res').innerHTML='';updMarket();
+  },
+  sail:()=>{
+    if(R.sail||!R.sel.length)return;
+    R.sail=true;updMarket();$('#res').innerHTML='';sfx('place');
+    const b=$('#boat');b.classList.remove('go');void b.offsetWidth;b.classList.add('go');
+    setTimeout(()=>{
+      R.sail=false;b.classList.remove('go');
+      const {t,d}=tally(),lack=GOODS.filter(g=>t[g.id]<NEED[g.id]),over=d>LIMIT;
+      updMarket();
+      if(!lack.length&&!over){
+        R.ok++;sfx('ok');$('#res').innerHTML=`<div class="result yes">ส่งสินค้าครบและทันพิธีภายใน ${d} วัน!</div>`;
+        $('#go').disabled=true;R.sail=true;setTimeout(finishLevel,1400);
+      }else{
+        R.bad++;sfx('bad');
+        lack.forEach(g=>$('#g-'+g.id).classList.add('shortage'));
+        const msg=[];if(lack.length)msg.push('สินค้าไม่ครบ ขาด '+lack.map(g=>`${g.name} ${NEED[g.id]-t[g.id]}`).join(', '));if(over)msg.push(`ใช้เวลา ${d} วัน เกินกำหนด ${LIMIT} วัน`);
+        $('#res').innerHTML=`<div class="result no">${msg.join('<br>')}</div>`;
+      }
+    },2800);
+  }
+});
+
+/* ------------------------------------------------------------------ L5 */
+const EVT=[
+ {t:'สถาปนากรุงศรีอยุธยา',d:'สมเด็จพระรามาธิบดีที่ 1 (พระเจ้าอู่ทอง) ทรงสถาปนาราชธานี',y:'พ.ศ. 1893'},
+ {t:'เสียกรุงครั้งที่ 1',d:'กองทัพหงสาวดีตีกรุงศรีอยุธยาแตก',y:'พ.ศ. 2112'},
+ {t:'ยุทธหัตถี',d:'สมเด็จพระนเรศวรมหาราชทรงกระทำยุทธหัตถี',y:'พ.ศ. 2135'},
+ {t:'ราชทูตไปฝรั่งเศส',d:'คณะราชทูตสยามเข้าเฝ้าพระเจ้าหลุยส์ที่ 14 ที่พระราชวังแวร์ซาย',y:'พ.ศ. 2229'},
+ {t:'เสียกรุงครั้งที่ 2',d:'กรุงศรีอยุธยาล่มสลาย',y:'พ.ศ. 2310'},
+ {t:'ขึ้นทะเบียนมรดกโลก',d:'ยูเนสโกขึ้นทะเบียนนครประวัติศาสตร์พระนครศรีอยุธยา',y:'พ.ศ. 2534'}
+];
+LV[5]={
+ init(){let o;do{o=shuffle([0,1,2,3,4,5])}while(o.every((v,i)=>v===i));R.list=o;R.lock=Array(6).fill(false);R.sel=null;R.res=[];R.reveal=false;R.busy=false},
+ render(){
+  root().innerHTML=`<section class="screen">${hud('ด่านที่ 5 : ประตูพระคลังหลวง')}<div class="lvl one"><div class="col">
+  <div class="scene banner vault" id="vault">${palaceScene()}<div class="caption">${ico('lock')}ประตูพระคลังล็อกอยู่ ต้องเรียงลำดับเหตุการณ์ให้ถูกต้อง</div></div>
+  <div class="paper board"><p class="lead">เรียงจาก “เก่าที่สุด” (บนสุด) ไป “ใหม่ที่สุด” (ล่างสุด) แตะการ์ดสองใบเพื่อสลับตำแหน่ง หรือกดลูกศร</p><div class="tl" id="tl"></div>
+  <div class="row-btns"><button class="btn lg" data-act="echk">ตรวจคำตอบ</button></div></div></div></div></section>`;
+  drawTL();
+ },
+ hint(){
+  const i=R.list.findIndex((v,k)=>v!==k&&!R.lock[k]);
+  if(i<0||R.busy)return false;
+  const j=R.list.indexOf(i);[R.list[i],R.list[j]]=[R.list[j],R.list[i]];
+  R.lock[i]=true;R.sel=null;R.res=[];drawTL();toast('ล็อกการ์ดที่ถูกตำแหน่งให้ 1 ใบ');sfx('ok');return true;
+ }
+};
+function drawTL(){
+  const el=$('#tl');if(!el)return;
+  el.innerHTML=R.list.map((e,i)=>{
+    const ev=EVT[e],lk=R.lock[i];
+    return `<div class="ev ${R.sel===i?'sel':''} ${R.res[i]||''}" data-act="esel" data-i="${i}" role="button" tabindex="0"><span class="no">${i+1}</span><span class="tx"><b>${ev.t}</b><small>${ev.d}</small></span>${(R.reveal||lk)?`<span class="yr">${ev.y}</span>`:''}${lk?`<span class="lkic">${ico('lock')}</span>`:`<span class="mv"><button data-act="eup" data-i="${i}" aria-label="เลื่อนขึ้น" ${i===0?'disabled':''}>${ico('up')}</button><button data-act="edn" data-i="${i}" aria-label="เลื่อนลง" ${i===5?'disabled':''}>${ico('down')}</button></span>`}</div>`;
+  }).join('');
+}
+function swapEv(a,b){
+  if(R.busy||a<0||b<0||a>5||b>5||R.lock[a]||R.lock[b])return;
+  [R.list[a],R.list[b]]=[R.list[b],R.list[a]];R.sel=null;R.res=[];sfx('place');drawTL();
+}
+Object.assign(ACT,{
+  esel:el=>{
+    const i=+el.dataset.i;if(R.busy||R.lock[i])return;
+    if(R.sel===null)R.sel=i;else if(R.sel===i)R.sel=null;else{swapEv(R.sel,i);return}
+    drawTL();
+  },
+  eup:el=>swapEv(+el.dataset.i,+el.dataset.i-1),
+  edn:el=>swapEv(+el.dataset.i,+el.dataset.i+1),
+  echk:()=>{
+    if(R.busy)return;let n=0;
+    R.list.forEach((v,i)=>{const ok=v===i;R.res[i]=ok?'ok':'bad';if(ok)n++});
+    R.sel=null;
+    if(n===6){
+      R.ok++;R.busy=true;R.reveal=true;R.list=[0,1,2,3,4,5];drawTL();sfx('win');
+      $('#vault').classList.add('open');setTimeout(finishLevel,2400);
+    }else{R.bad++;sfx('bad');drawTL();toast(`ถูกตำแหน่ง ${n} จาก 6 ใบ ลองสลับการ์ดสีแดงดูใหม่`)}
+  }
+});
+
+/* ------------------------------------------------------------------ boot */
+let started=false;
+document.addEventListener('pointerdown',()=>{if(!started){started=true;if(S.music){actx();musicOn()}}},{once:true});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)musicOff();else if(started&&S.music)musicOn()});
+SCR.menu();
+</script>
+
+</body></html>
